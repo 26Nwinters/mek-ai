@@ -207,47 +207,55 @@ function finishWakeRequest(){
 function startHandsFreeCapture(){
  if(!handsFreeVoice||voiceCaptureStarting||sleeping||voiceAwaitingReply)return;
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){stopHandsFreeVoice('VOICE INPUT NOT SUPPORTED HERE');return}
+ if(!SR){stopHandsFreeVoice('VOICE INPUT NOT SUPPORTED HERE');setFace('confused','VOICE UNSUPPORTED','TRY CHROME MICROPHONE SETTINGS');return}
  voiceCaptureStarting=true;
- const rec=new SR();recognition=rec;rec.lang=navigator.language||'en-US';rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=1;
- rec.onstart=()=>{voiceCaptureStarting=false;if(!handsFreeVoice){try{rec.stop()}catch{}return}setFace('listening',wakeWordDetected?'LISTENING TO REQUEST':'AWAITING “MECHA”','WAKE WORD // ACTIVE');$('#voiceStatus').textContent=wakeWordDetected?'SPEAK YOUR REQUEST...':'SAY “MECHA” TO START A REQUEST';};
+ const rec=new SR();recognition=rec;rec.lang=navigator.language||'en-US';rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=3;
+ rec.onstart=()=>{voiceCaptureStarting=false;if(!handsFreeVoice){try{rec.stop()}catch{}return}setFace('listening',wakeWordDetected?'LISTENING TO REQUEST':'MICROPHONE ACTIVE','SPEECH INPUT // '+(wakeWordDetected?'CAPTURING REQUEST':'WAITING FOR “MECHA”'));$('#voiceStatus').textContent=wakeWordDetected?'MIC ACTIVE. SAY YOUR REQUEST...':'MIC ACTIVE. SAY “MECHA” TO START.';};
  rec.onresult=e=>{
   if(!handsFreeVoice||voiceAwaitingReply)return;
-  let fresh='';
+  let fresh='',interim='';
   for(let i=e.resultIndex;i<e.results.length;i++){
-   const result=e.results[i];
-   if(!result.isFinal)continue;
-   const phrase=(result[0]?.transcript||'').trim();
-   if(phrase)fresh+=' '+phrase;
+   const result=e.results[i],phrase=(result[0]?.transcript||'').trim();
+   if(!phrase)continue;
+   if(result.isFinal)fresh+=' '+phrase;else interim+=' '+phrase;
   }
-  fresh=fresh.trim();if(!fresh)return;
+  fresh=fresh.trim();interim=interim.trim();
+  const heard=(fresh||interim).slice(-150);
+  if(!wakeWordDetected&&interim){$('#voiceStatus').textContent='MIC HEARS: “'+heard+'” · WAITING FOR “MECHA”.';$('#eyeSub').textContent='HEARING: '+heard.toUpperCase();return}
+  if(wakeWordDetected&&interim){
+   clearWakeSilenceTimer();
+   wakeSilenceTimer=setTimeout(()=>finishWakeRequest(),END_OF_SPEECH_MS);
+   $('#voiceStatus').textContent='CAPTURING SPEECH: “'+heard+'”';
+   $('#eyeSub').textContent='REQUEST: '+(wakeTranscript+' '+interim).trim().toUpperCase().slice(-100);
+  }
+  if(!fresh)return;
   const normalized=fresh.toLowerCase();
   if(!wakeWordDetected){
-   // Browser engines often transcribe invented wake words phonetically.
-   const match=normalized.match(/\b(?:mecha|mecca|mekka|meka|mech[a]?|meesha)\b[\s,.:;!?-]*(.*)/i);
-   if(!match){$('#voiceStatus').textContent='HEARD: “'+fresh+'” · WAITING FOR “MECHA”.';return}
+   // Speech recognition may render the wake word phonetically; show all heard text for diagnosis.
+   const match=normalized.match(/\b(?:mecha|mecca|mekka|meka|mech|meesha|misha|meshah|mechuh|mecca)\b[\s,.:;!?-]*(.*)/i);
+   if(!match){$('#voiceStatus').textContent='HEARD: “'+fresh+'” · WAITING FOR “MECHA”.';$('#eyeSub').textContent='HEARD: '+fresh.toUpperCase().slice(-100);return}
    wakeWordDetected=true;wakeTranscript=(match[1]||'').trim();
-   setFace('listening','WAKE WORD DETECTED','REQUEST CAPTURE // ACTIVE');
-   $('#voiceStatus').textContent=wakeTranscript?'HEARING YOUR REQUEST...':'MECHA DETECTED. GO AHEAD...';
+   setFace('listening','MECHA DETECTED','REQUEST CAPTURE // ACTIVE');
+   $('#voiceStatus').textContent=wakeTranscript?'CAPTURING REQUEST: “'+wakeTranscript+'”':'MECHA DETECTED. GO AHEAD...';
   }else{
    wakeTranscript=(wakeTranscript+' '+fresh).trim();
-   wakeTranscript=wakeTranscript.replace(/^mecha\b[\s,.:;!?-]*/i,'').trim();
-   $('#voiceStatus').textContent='CAPTURING REQUEST...';
+   wakeTranscript=wakeTranscript.replace(/^\s*(?:mecha|mecca|mekka|meka|mech|meesha|misha|meshah|mechuh)\b[\s,.:;!?-]*/i,'').trim();
+   $('#voiceStatus').textContent='CAPTURING REQUEST: “'+wakeTranscript+'”';
   }
   lastVoiceActivity=Date.now();clearWakeSilenceTimer();
   wakeSilenceTimer=setTimeout(()=>finishWakeRequest(),END_OF_SPEECH_MS);
  };
  rec.onerror=e=>{
   voiceCaptureStarting=false;if(!handsFreeVoice)return;
-  const msg=e.error==='not-allowed'||e.error==='service-not-allowed'?'MICROPHONE PERMISSION DENIED':e.error==='no-speech'?'STANDBY. SAY “MECHA” WHEN READY':'VOICE ERROR: '+e.error;
-  $('#voiceStatus').textContent=msg;
+  const msg=e.error==='not-allowed'||e.error==='service-not-allowed'?'MIC PERMISSION DENIED. CLICK THE SITE ICON IN CHROME.':e.error==='no-speech'?'MIC ACTIVE, NO SPEECH DETECTED. TRY AGAIN.':'VOICE ERROR: '+e.error;
+  $('#voiceStatus').textContent=msg;setFace('confused','VOICE INPUT ISSUE',msg);
   if(e.error==='not-allowed'||e.error==='service-not-allowed')stopHandsFreeVoice(msg);
  };
  rec.onend=()=>{
   if(recognition===rec)recognition=null;voiceCaptureStarting=false;
   if(handsFreeVoice&&!sleeping&&!voiceAwaitingReply)setTimeout(()=>startHandsFreeCapture(),350);
  };
- try{rec.start()}catch(e){voiceCaptureStarting=false;$('#voiceStatus').textContent='COULD NOT START MICROPHONE';if(handsFreeVoice)setTimeout(()=>{if(handsFreeVoice&&!recognition)startHandsFreeCapture()},700)}
+ try{rec.start()}catch(e){voiceCaptureStarting=false;$('#voiceStatus').textContent='COULD NOT START MICROPHONE. CHECK CHROME PERMISSIONS.';setFace('confused','MICROPHONE DID NOT START','CHECK SITE PERMISSIONS');if(handsFreeVoice)setTimeout(()=>{if(handsFreeVoice&&!recognition)startHandsFreeCapture()},700)}
 }
 function resumeHandsFreeAfterReply(){
  if(!handsFreeVoice||sleeping)return;
