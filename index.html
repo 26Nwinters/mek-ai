@@ -215,7 +215,9 @@ function startHandsFreeCapture(){
   if(!handsFreeVoice||voiceAwaitingReply)return;
   let fresh='';
   for(let i=e.resultIndex;i<e.results.length;i++){
-   const result=e.results[i];const phrase=(result[0]?.transcript||'').trim();
+   const result=e.results[i];
+   if(!result.isFinal)continue;
+   const phrase=(result[0]?.transcript||'').trim();
    if(phrase)fresh+=' '+phrase;
   }
   fresh=fresh.trim();if(!fresh)return;
