@@ -188,7 +188,7 @@ function say(role,text,save=true){const m={role,text,at:Date.now()};if(save){mes
 function stopHandsFreeVoice(status='MICROPHONE STANDBY'){
  handsFreeVoice=false;voiceCaptureStarting=false;voiceAwaitingReply=false;
  if(recognition){const active=recognition;recognition=null;try{active.onend=null;active.stop()}catch{}}
- $('#voiceInput').textContent='TALK TO MEK';$('#voiceInput').setAttribute('aria-pressed','false');$('#voiceStatus').textContent=status;
+ $('#voiceInput').textContent='TALK TO MEK';$('#voiceInput').setAttribute('aria-pressed','false');$('#ambientTalk').textContent='TALK TO MEK';$('#voiceStatus').textContent=status;
 }
 function startHandsFreeCapture(){
  if(!handsFreeVoice||voiceCaptureStarting||sleeping)return;
@@ -324,7 +324,7 @@ $('#ambientToggle').addEventListener('click',()=>document.body.classList.contain
 $('#ambientExit').addEventListener('click',exitAmbient);
 $('#fullscreenToggle').addEventListener('click',async()=>{try{if(!document.fullscreenElement){await document.documentElement.requestFullscreen();$('#fullscreenToggle').textContent='EXIT FULLSCREEN'}else{await document.exitFullscreen();$('#fullscreenToggle').textContent='FULLSCREEN'}}catch{$('#status').textContent='FULLSCREEN UNAVAILABLE'}});
 document.addEventListener('fullscreenchange',()=>{$('#fullscreenToggle').textContent=document.fullscreenElement?'EXIT FULLSCREEN':'FULLSCREEN'});
-$('#ambientTalk').addEventListener('click',()=>{exitAmbient();$('#message').focus({preventScroll:true})});
+$('#ambientTalk').addEventListener('click',()=>{if(handsFreeVoice){stopHandsFreeVoice();setFace('idle','SYSTEM STANDBY','PIXEL PERSONA // MK-I');return}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){setFace('confused','VOICE UNAVAILABLE','OPEN CHAT MODE TO TYPE');return}voiceReplies=true;handsFreeVoice=true;voiceAwaitingReply=false;$('#ambientTalk').textContent='STOP LISTENING';$('#voiceInput').textContent='STOP LISTENING';$('#voiceInput').setAttribute('aria-pressed','true');$('#voiceStatus').textContent='STARTING MICROPHONE...';setFace('thinking','STARTING VOICE','MICROPHONE ACCESS');startHandsFreeCapture()});
 $('.eyewrap').addEventListener('click',()=>{if(document.body.classList.contains('ambient-mode')){exitAmbient();$('#message').focus({preventScroll:true})}});
 
 
