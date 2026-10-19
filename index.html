@@ -326,53 +326,53 @@ function getRelevantMemories(question){
 }
 function handleLocalUtilityIntent(input){
  const q=String(input||'').trim(),low=q.toLowerCase(),now=Date.now();
- const timerIntent=/\\b(timer|countdown)\\b/.test(low)&&/\\b(set|start|make|create|cancel|stop|clear|list|show|what|how many)\\b/.test(low);
- const reminderIntent=/\\b(remind(?:er)?|remind me)\\b/.test(low)&&/\\b(set|add|create|schedule|cancel|delete|remove|list|show|what|when|remind)\\b/.test(low);
- if(/\\b(list|show|what|how many)\\b/.test(low)&&/\\b(timers?)\\b/.test(low)){
+ const timerIntent=/\b(timer|countdown)\b/.test(low)&&/\b(set|start|make|create|cancel|stop|clear|list|show|what|how many)\b/.test(low);
+ const reminderIntent=/\b(remind(?:er)?|remind me)\b/.test(low)&&/\b(set|add|create|schedule|cancel|delete|remove|list|show|what|when|remind)\b/.test(low);
+ if(/\b(list|show|what|how many)\b/.test(low)&&/\b(timers?)\b/.test(low)){
   const active=timers.filter(x=>!x.done);
   return active.length?'You have '+active.length+' active timer'+(active.length===1?'':'s')+': '+active.map(x=>x.label+' ('+fmtDuration(x.due-now)+')').join('; ')+'.':'You have no active timers.';
  }
- if(/\\b(list|show|what|when)\\b/.test(low)&&/\\b(reminders?)\\b/.test(low)){
+ if(/\b(list|show|what|when)\b/.test(low)&&/\b(reminders?)\b/.test(low)){
   const active=reminders.filter(x=>!x.done&&Number(x.at)>=now);
   return active.length?'Your upcoming reminders: '+active.slice(0,8).map(x=>x.text+' ('+new Date(x.at).toLocaleString()+')').join('; ')+'.':'You have no upcoming reminders.';
  }
- if(timerIntent&&/\\b(cancel|stop|clear)\\b/.test(low)){
-  const target=low.replace(/\\b(cancel|stop|clear|the|my|all|active|timer|timers|countdown|please)\\b/g,'').trim();
+ if(timerIntent&&/\b(cancel|stop|clear)\b/.test(low)){
+  const target=low.replace(/\b(cancel|stop|clear|the|my|all|active|timer|timers|countdown|please)\b/g,'').trim();
   const before=timers.length;
-  if(/\\ball\\b/.test(low)||!target)timers=timers.filter(x=>x.done);
+  if(/\ball\b/.test(low)||!target)timers=timers.filter(x=>x.done);
   else timers=timers.filter(x=>x.done||!x.label.toLowerCase().includes(target));
   const removed=before-timers.length;put('timers',timers);renderUtilities();renderAmbientLists();
   return removed?'Cancelled '+removed+' timer'+(removed===1?'':'s')+'.':'I could not find a matching active timer.';
  }
- if(reminderIntent&&/\\b(cancel|delete|remove)\\b/.test(low)){
-  const target=low.replace(/\\b(cancel|delete|remove|the|my|all|reminder|reminders|please)\\b/g,'').trim();
+ if(reminderIntent&&/\b(cancel|delete|remove)\b/.test(low)){
+  const target=low.replace(/\b(cancel|delete|remove|the|my|all|reminder|reminders|please)\b/g,'').trim();
   const before=reminders.length;
-  if(/\\ball\\b/.test(low)||!target)reminders=reminders.filter(x=>x.done);
+  if(/\ball\b/.test(low)||!target)reminders=reminders.filter(x=>x.done);
   else reminders=reminders.filter(x=>x.done||!x.text.toLowerCase().includes(target));
   const removed=before-reminders.length;put('reminders',reminders);renderUtilities();renderAmbientLists();
   return removed?'Removed '+removed+' reminder'+(removed===1?'':'s')+'.':'I could not find a matching reminder.';
  }
- if(timerIntent&&/\\b(for|in)\\s+\\d/.test(low)){
-  const m=low.match(/\\b(?:for|in)\\s+(\\d+(?:\\.\\d+)?)\\s*(seconds?|secs?|minutes?|mins?|hours?|hrs?|days?)\\b/);
+ if(timerIntent&&/\b(for|in)\s+\d/.test(low)){
+  const m=low.match(/\b(?:for|in)\s+(\d+(?:\.\d+)?)\s*(seconds?|secs?|minutes?|mins?|hours?|hrs?|days?)\b/);
   if(!m)return 'I can set that timer, but I need a duration such as “10 minutes” or “1 hour”.';
   let ms=Number(m[1])*(/^s|^sec/.test(m[2])?1000:/^h|^hr/.test(m[2])?3600000:/^d/.test(m[2])?86400000:60000);
   if(!Number.isFinite(ms)||ms<=0||ms>86400000)return 'Please choose a timer duration between a second and 24 hours.';
-  const labelMatch=q.match(/\\b(?:called|named|for)\\s+([a-z0-9][a-z0-9 '’-]{0,35}?)(?=\\s+(?:in|for)\\s+\\d|$)/i);
-  let label=labelMatch?labelMatch[1].trim():'Timer';if(/^\\d/.test(label))label='Timer';
+  const labelMatch=q.match(/\b(?:called|named|for)\s+([a-z0-9][a-z0-9 '’-]{0,35}?)(?=\s+(?:in|for)\s+\d|$)/i);
+  let label=labelMatch?labelMatch[1].trim():'Timer';if(/^\d/.test(label))label='Timer';
   timers.push({id:Date.now()+Math.random(),label,due:now+ms,done:false});put('timers',timers);renderUtilities();renderAmbientLists();
   return 'Timer set for '+fmtDuration(ms)+(label!=='Timer'?' ('+label+')':'')+'. I will alert you while MEK-AI is running and the device is awake.';
  }
  if(reminderIntent){
-  const inMatch=low.match(/\\b(?:in|after)\\s+(\\d+(?:\\.\\d+)?)\\s*(seconds?|secs?|minutes?|mins?|hours?|hrs?|days?)\\b/);
+  const inMatch=low.match(/\b(?:in|after)\s+(\d+(?:\.\d+)?)\s*(seconds?|secs?|minutes?|mins?|hours?|hrs?|days?)\b/);
   let at=NaN;
   if(inMatch){const n=Number(inMatch[1]),unit=inMatch[2];at=now+n*(/^s|^sec/.test(unit)?1000:/^h|^hr/.test(unit)?3600000:/^d/.test(unit)?86400000:60000)}
   else{
-   const timeMatch=low.match(/\\b(?:at\\s+)?(\\d{1,2})(?::(\\d{2}))?\\s*(am|pm)\\b/);
+   const timeMatch=low.match(/\b(?:at\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/);
    if(timeMatch){let h=Number(timeMatch[1])%12;if(timeMatch[3]==='pm')h+=12;const d=new Date();d.setHours(h,Number(timeMatch[2]||0),0,0);if(d.getTime()<=now)d.setDate(d.getDate()+1);at=d.getTime()}
-   else if(/\\btomorrow\\b/.test(low)){const d=new Date();d.setDate(d.getDate()+1);d.setHours(9,0,0,0);at=d.getTime()}
+   else if(/\btomorrow\b/.test(low)){const d=new Date();d.setDate(d.getDate()+1);d.setHours(9,0,0,0);at=d.getTime()}
   }
-  const textMatch=q.match(/remind me to\\s+(.+?)(?:\\s+(?:in|after)\\s+\\d|\\s+at\\s+\\d|\\s+tomorrow\\b|$)/i);
-  const label=textMatch?textMatch[1].trim().replace(/[.!?]+$/,''):q.replace(/^.*?remind(?: me)?(?: to)?\\s*/i,'').trim();
+  const textMatch=q.match(/remind me to\s+(.+?)(?:\s+(?:in|after)\s+\d|\s+at\s+\d|\s+tomorrow\b|$)/i);
+  const label=textMatch?textMatch[1].trim().replace(/[.!?]+$/,''):q.replace(/^.*?remind(?: me)?(?: to)?\s*/i,'').trim();
   if(!label)return 'What should I remind you about?';
   if(!Number.isFinite(at)||at<=now)return 'I can schedule that reminder. Give me a time, such as “in 20 minutes”, “at 5 pm”, or “tomorrow”.';
   reminders.push({id:Date.now()+Math.random(),text:label,at,done:false});put('reminders',reminders);renderUtilities();renderAmbientLists();
