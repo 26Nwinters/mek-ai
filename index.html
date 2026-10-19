@@ -188,9 +188,9 @@ function say(role,text,save=true){const m={role,text,at:Date.now()};if(save){mes
 function render(m){const el=document.createElement('div');el.className='msg '+(m.role==='user'?'user':'system');const who=document.createElement('div');who.className='who';who.textContent=m.role==='user'?'OPERATOR':'MEK-AI // DEMO';const body=document.createElement('div');body.textContent=m.text;el.append(who,body);$('#chatlog').append(el);$('#chatlog').scrollTop=$('#chatlog').scrollHeight}
 async function getDirectWeatherAnswer(question){
  const q=String(question||'');
- const weatherIntent=/\\b(weather|temperature|forecast|rain|snow|wind|humid(?:ity)?|outside|jacket|coat|umbrella|conditions)\\b|bring a (?:jacket|coat|umbrella)|what should i wear/i.test(q);
+ const weatherIntent=/\b(weather|temperature|forecast|rain|snow|wind|humid(?:ity)?|outside|jacket|coat|umbrella|conditions)\b|bring a (?:jacket|coat|umbrella)|what should i wear/i.test(q);
  if(!weatherIntent)return null;
- const detailed=/hour.?by.?hour|hourly|next few hours|later today|this evening|tonight|when will|what time|rain later|rain tonight|forecast details|more detail|more info|next \\d+ hours|tomorrow|this week/i.test(q);
+ const detailed=/hour.?by.?hour|hourly|next few hours|later today|this evening|tonight|when will|what time|rain later|rain tonight|forecast details|more detail|more info|next \d+ hours|tomorrow|this week/i.test(q);
  if(detailed)return null;
  try{
   const l=weatherLocation;
