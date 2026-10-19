@@ -1,0 +1,15 @@
+{
+  "id": "/mek-ai/",
+  "name": "MEK-AI Personal Assistant",
+  "short_name": "MEK-AI",
+  "description": "Personal assistant dashboard and voice interface",
+  "start_url": "/mek-ai/",
+  "scope": "/mek-ai/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090b0b",
+  "theme_color": "#090b0b",
+  "icons": [
+    {"src": "/mek-ai/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
