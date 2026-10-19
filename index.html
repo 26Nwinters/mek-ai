@@ -34,8 +34,59 @@ body.ambient-mode .ambient-controls #ambientExit{border-color:#665333;color:var(
 body.ambient-mode .eyewrap{cursor:pointer}
 @media(max-height:560px){body.ambient-mode .eyewrap{width:min(28vh,26vw,180px)}body.ambient-mode .ambient-clock{margin-top:8px}body.ambient-mode #ambientTime{font-size:clamp(34px,7vh,58px)}body.ambient-mode .ambient-controls{margin-top:12px}}
 @media(prefers-reduced-motion:reduce){body.ambient-mode *{animation:none!important}}
+
+/* Ambient home dashboard concept */
+#ambientDashboard{display:none}
+body.ambient-mode .app{background:#080a08}
+body.ambient-mode .app:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#080a08aa,#080a0855 45%,#080a08aa),radial-gradient(ellipse at 50% 42%,#5b351b44,transparent 48%),repeating-linear-gradient(0deg,#e9a34008 0 1px,transparent 1px 5px)}
+body.ambient-mode #ambientDashboard{display:grid;grid-template-columns:minmax(230px,.92fr) minmax(340px,1.15fr) minmax(230px,.92fr);grid-template-rows:auto minmax(0,1fr) auto;gap:14px;padding:14px 22px 18px;width:100%;height:100dvh;min-height:0;overflow:auto}
+.amb-top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #554022;padding:4px 6px 12px;gap:12px}
+.amb-brand{color:var(--amber);font-size:clamp(18px,2vw,27px);letter-spacing:.18em;font-weight:bold}.amb-kicker{color:var(--muted);font-size:10px;letter-spacing:.22em;margin-top:3px}
+.amb-column{display:flex;flex-direction:column;gap:14px;min-width:0}
+.amb-panel{border:1px solid #604321;background:linear-gradient(145deg,#11140fe8,#090b09f2);box-shadow:inset 0 0 22px #e78b1510;min-width:0;overflow:hidden}
+.amb-head{padding:11px 13px;border-bottom:1px solid #48351f;color:var(--orange);font-size:11px;letter-spacing:.18em;display:flex;justify-content:space-between;gap:8px}
+.amb-content{padding:13px}.amb-clock{font-size:clamp(30px,3.7vw,60px);line-height:1.1;color:var(--amber);letter-spacing:.04em;font-weight:bold;font-variant-numeric:tabular-nums;white-space:nowrap}.amb-date{margin-top:9px;color:var(--muted);font-size:clamp(10px,1vw,13px);letter-spacing:.1em;text-transform:uppercase}
+.amb-greeting{color:var(--orange);font-size:11px;letter-spacing:.12em;margin-top:14px}
+.amb-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #30271a;font-size:12px}.amb-row:last-child{border-bottom:0}.amb-dot{width:8px;height:8px;flex:none;border:1px solid var(--orange);border-radius:50%}.amb-row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.amb-muted{font-size:11px;color:var(--muted);line-height:1.6}
+.amb-center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;position:relative;background:radial-gradient(ellipse at 50% 48%,#b86c2026 0%,#35241514 38%,transparent 72%);border-bottom:1px solid #6c4827}
+.amb-center:before{content:"";position:absolute;inset:9% 8%;border:2px solid #6d4828;clip-path:polygon(8% 0,92% 0,100% 9%,100% 91%,92% 100%,8% 100%,0 91%,0 9%);pointer-events:none;box-shadow:inset 0 0 35px #e28b1b14}
+.amb-center .hero{order:0;background:transparent;border:0;box-shadow:none;width:100%;height:auto;min-height:0;padding:14px 8px;z-index:1}
+.amb-center .eyewrap{width:min(35vh,22vw,310px);max-width:310px;margin:0 auto 12px;filter:drop-shadow(0 0 20px #f28a2750)}
+.amb-center .hero h2{font-size:clamp(14px,1.6vw,20px)}.amb-center .hero p{font-size:10px}
+.amb-center .ambient-clock,.amb-center .ambient-controls{display:none!important}
+.amb-nameplate{z-index:1;text-align:center;border:1px solid #604321;background:#0c0d0a;padding:9px 24px;min-width:55%;color:var(--amber);letter-spacing:.2em;font-size:16px;font-weight:bold}
+.amb-nameplate small{display:block;color:var(--orange);font-size:9px;letter-spacing:.16em;font-weight:normal;margin-top:5px}
+.amb-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px}
+.amb-tool{min-height:74px;border:1px solid #62421f;background:#100f0b;color:var(--amber);font:inherit;font-size:10px;letter-spacing:.1em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px}
+.amb-tool strong{font-size:20px;font-weight:normal;color:var(--orange)}
+.amb-tool:active,.amb-tool:focus-visible{background:#302114;border-color:var(--orange)}
+.amb-bottom{grid-column:1/-1;display:grid;grid-template-columns:1.15fr 1fr 1fr auto;gap:12px;align-items:stretch}
+.amb-status{border:1px solid #4b3822;background:#0e110d;padding:11px 13px;min-width:0}
+.amb-status b{display:block;color:var(--orange);font-size:10px;letter-spacing:.16em;margin-bottom:7px}
+.amb-status span{font-size:11px;color:var(--muted)}
+.amb-quote{text-align:center;display:flex;flex-direction:column;justify-content:center;color:var(--amber);font-size:11px;letter-spacing:.04em}.amb-quote small{color:var(--muted);margin-top:5px}
+.amb-raccoon{display:grid;place-items:center;width:74px;min-width:74px;border:1px solid #4b3822;background:linear-gradient(145deg,#161a13,#0a0c0a);color:#9a7045}
+.amb-raccoon svg{width:54px;height:43px}
+body.ambient-mode #ambientDashboard .ambient-controls{display:none!important}
+@media(max-width:900px){body.ambient-mode #ambientDashboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto auto;padding:10px;gap:10px}.amb-top,.amb-bottom{grid-column:1/-1}.amb-center{grid-column:1/-1;grid-row:2;min-height:300px}.amb-left{grid-column:1}.amb-right{grid-column:2}.amb-bottom{grid-template-columns:1fr 1fr}.amb-raccoon{display:none}.amb-center .eyewrap{width:min(32vh,38vw,260px)}}
+@media(max-height:650px) and (min-width:901px){body.ambient-mode #ambientDashboard{grid-template-rows:auto minmax(0,1fr) auto;gap:8px;padding:8px 14px}.amb-column{gap:8px}.amb-content{padding:9px}.amb-tools{gap:5px;padding:8px}.amb-tool{min-height:54px}.amb-center .eyewrap{width:min(27vh,18vw,220px)}.amb-center .hero{padding:4px}.amb-bottom{gap:8px}}
 </style></head><body><div class="authgate" id="authGate"><div class="authbox"><div class="brandmark" style="margin-bottom:16px">NW</div><h2>MEK-AI // ACCESS CONTROL</h2><p>Private operator login. Sign in with your existing MEK-AI Supabase email and password.</p><form id="authForm"><label for="authEmail">OPERATOR EMAIL</label><input id="authEmail" type="email" autocomplete="username" required><label for="authPassword">ACCESS PASSWORD</label><input id="authPassword" type="password" autocomplete="current-password" required><div class="authrow"><button class="primary" id="authSubmit" type="submit">AUTHENTICATE</button><button class="secondary hidden" id="authSignOut" type="button">SIGN OUT</button></div><div class="autherror" id="authError" role="status"></div></form><p class="authsmall">New account registration is disabled. Your AI key stays on the server.</p></div></div><div class="app hidden" id="mekApp"><header><div class="brand"><div class="brandmark">NW</div><div><h1 id="title">MEK-AI</h1><div class="sub">Personal systems interface</div></div></div><div class="headtools"><div class="status" id="status">LOCAL INTERFACE</div><button class="secondary display-toggle" id="ambientToggle" type="button">AMBIENT DISPLAY</button><button class="secondary display-toggle" id="fullscreenToggle" type="button">FULLSCREEN</button></div></header><nav><button class="active" data-view="home">Core</button><button data-view="memory">Memory</button><button data-view="settings">Settings</button></nav><main>
-<section class="view active" id="home"><div class="dashboard"><div class="hero"><div class="eyewrap"><svg class="eye state-idle" id="eye" viewBox="0 0 260 260" role="img" aria-label="MEK-AI expressive pixel face">
+<section class="view active" id="home"><div id="ambientDashboard" aria-label="MEK-AI ambient home dashboard">
+<div class="amb-top"><div><div class="amb-brand">MEK-AI</div><div class="amb-kicker">HOME ASSISTANT // PERSONAL SYSTEMS</div></div><div class="amb-kicker">SMARTER HOME&nbsp; // &nbsp;CALMER DAYS</div></div>
+<div class="amb-column amb-left">
+<div class="amb-panel"><div class="amb-head">LOCAL TIME <span>CHRONO // 01</span></div><div class="amb-content"><div class="amb-clock" id="ambientDashTime">--:--</div><div class="amb-date" id="ambientDashDate">LOADING DATE</div><div class="amb-greeting" id="ambientGreeting">SYSTEM READY // GOOD TO SEE YOU</div></div></div>
+<div class="amb-panel"><div class="amb-head">WEATHER <span>OUTSIDE</span></div><div class="amb-content"><div style="font-size:20px;color:var(--amber);margin-bottom:8px">WEATHER LINK STANDBY</div><div class="amb-muted">Live conditions can be connected in a later step. No forecast is fabricated here.</div></div></div>
+<div class="amb-panel"><div class="amb-head">TODAY <span>AGENDA</span></div><div class="amb-content" id="ambientAgenda"><div class="amb-muted">No reminders scheduled.</div></div></div>
+</div>
+<div class="amb-center" id="ambientFaceSlot"></div>
+<div class="amb-column amb-right">
+<div class="amb-panel"><div class="amb-head">REMINDERS <span>LOCAL</span></div><div class="amb-content" id="ambientReminders"><div class="amb-muted">No active reminders.</div></div></div>
+<div class="amb-panel"><div class="amb-head">QUICK TOOLS <span>TOUCH ACCESS</span></div><div class="amb-tools">
+<button class="amb-tool" data-amb-action="timer"><strong>◷</strong>TIMER</button><button class="amb-tool" data-amb-action="reminder"><strong>▦</strong>REMINDER</button><button class="amb-tool" data-amb-action="weather"><strong>☼</strong>WEATHER</button><button class="amb-tool" data-amb-action="memory"><strong>⌘</strong>MEMORY</button><button class="amb-tool" data-amb-action="settings"><strong>⚙</strong>SETTINGS</button><button class="amb-tool" data-amb-action="chat"><strong>•••</strong>CHAT</button>
+</div></div>
+</div>
+<div class="amb-bottom"><div class="amb-status"><b>SYSTEM STATUS</b><span id="ambientSysStatus">CORE NOMINAL &nbsp; // &nbsp; BROWSER ONLINE</span></div><div class="amb-status"><b>MEMORY BANK</b><span id="ambientMemoryStatus">0 NOTES STORED</span></div><div class="amb-status amb-quote"><span id="ambientQuote">"Small steps still move you forward."</span><small>— MEK-AI</small></div><div class="amb-raccoon" aria-label="Raccoon mascot"><svg viewBox="0 0 80 60" role="img" aria-label="Raccoon silhouette"><path d="M12 22L7 4L27 14Q40 9 53 14L73 4L68 24Q75 35 66 46L54 54H25L13 43Q5 33 12 22Z" fill="#9a7045"/><path d="M10 26L29 19L40 24L51 19L70 26L63 37L51 32L40 36L29 32L17 37Z" fill="#24221a"/><circle cx="28" cy="27" r="3" fill="#f5bd58"/><circle cx="52" cy="27" r="3" fill="#f5bd58"/><path d="M35 39L40 36L45 39L40 43Z" fill="#e2c18c"/><path d="M26 49Q40 56 54 49" fill="none" stroke="#24221a" stroke-width="3"/></svg></div></div>
+</div><div class="dashboard"><div class="hero"><div class="eyewrap"><svg class="eye state-idle" id="eye" viewBox="0 0 260 260" role="img" aria-label="MEK-AI expressive pixel face">
 <defs><clipPath id="faceClip"><path d="M58 28H202L232 58V202L202 232H58L28 202V58Z"/></clipPath></defs>
 <path d="M58 28H202L232 58V202L202 232H58L28 202V58Z" fill="#11140f" stroke="#8e5729" stroke-width="6" shape-rendering="crispEdges"/>
 <path d="M62 42H198L218 62V198L198 218H62L42 198V62Z" fill="#1a1d14" stroke="#5e4827" stroke-width="3" shape-rendering="crispEdges"/>
@@ -101,40 +152,40 @@ $('#resetSettings').onclick=()=>{settings={...defaults};put('settings',settings)
 $('#exportData').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,settings,memories,messages},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mek-ai-backup.json';a.click();URL.revokeObjectURL(url)};
 $('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(d.settings)settings={...defaults,...d.settings};if(Array.isArray(d.memories))memories=d.memories;if(Array.isArray(d.messages))messages=d.messages;put('settings',settings);put('memories',memories);put('messages',messages);apply();refresh();$('#chatlog').replaceChildren();messages.forEach(render);alert('Backup imported.')}catch{alert('Invalid backup file.')}e.target.value=''};
 
-/* Ambient display controls */
-function updateAmbientClock(){
- const now=new Date();
- const time=$('#ambientTime'),date=$('#ambientDate');
- if(time)time.textContent=now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
- if(date)date.textContent=now.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'});
+
+/* Ambient dashboard rendering and navigation */
+const ambientHome=$('#ambientDashboard'),ambientHero=$('.hero');
+const ambientSlot=$('#ambientFaceSlot');
+function formatClock(){const d=new Date();$('#ambientDashTime').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});$('#ambientDashDate').textContent=d.toLocaleDateString([], {weekday:'long',month:'short',day:'numeric'}).toUpperCase();$('#ambientTime').textContent=$('#ambientDashTime').textContent;$('#ambientDate').textContent=$('#ambientDashDate').textContent;const h=d.getHours();$('#ambientGreeting').textContent=(h<12?'GOOD MORNING':h<17?'GOOD AFTERNOON':'GOOD EVENING')+' // SYSTEM STANDBY';}
+function safeLocalList(k){const v=get(k,[]);return Array.isArray(v)?v:[]}
+function renderAmbientLists(){
+ const rs=safeLocalList('reminders'),ts=safeLocalList('timers'),now=Date.now();
+ const active=rs.filter(r=>!r.done && (!r.at||new Date(r.at).getTime()>=now)).slice(0,4);
+ const row=(label,sub)=>'<div class="amb-row"><span class="amb-dot"></span><div>'+escapeAmbient(label)+'<small>'+escapeAmbient(sub)+'</small></div></div>';
+ $('#ambientReminders').innerHTML=active.length?active.map(r=>row(r.text||r.label||'Reminder',r.at?new Date(r.at).toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit'}):'UPCOMING')).join(''): '<div class="amb-muted">No active reminders. Add one with the quick tools.</div>';
+ const agenda=active.slice(0,3).concat(ts.slice(0,1).map(t=>({text:t.label||'Active timer',at:t.endsAt||t.endAt})));
+ $('#ambientAgenda').innerHTML=agenda.length?agenda.map(r=>row(r.text||r.label||'Scheduled item',r.at&&!isNaN(new Date(r.at))?new Date(r.at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'ON YOUR LIST')).join(''):'<div class="amb-muted">Nothing scheduled. Enjoy the quiet.</div>';
+ $('#ambientMemoryStatus').textContent=memories.length+' NOTE'+(memories.length===1?'':'S')+' STORED';
+ $('#ambientSysStatus').textContent=($('#coreStatus')?.textContent||'CORE NOMINAL')+' // '+($('#networkStatus')?.textContent||'BROWSER ONLINE');
 }
+function escapeAmbient(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function enterAmbient(){
- document.body.classList.add('ambient-mode');
- $('#ambientToggle').textContent='EXIT AMBIENT';
- updateAmbientClock();
+ if(!ambientSlot.contains(ambientHero))ambientSlot.insertBefore(ambientHero,ambientSlot.firstChild);
+ if(!ambientSlot.querySelector('.amb-nameplate'))ambientSlot.insertAdjacentHTML('beforeend','<div class="amb-nameplate">MEK-AI<small>ALWAYS HERE // ALWAYS LEARNING</small></div>');
+ document.body.classList.add('ambient-mode');$('#ambientToggle').textContent='EXIT AMBIENT';formatClock();renderAmbientLists();
 }
 function exitAmbient(){
- document.body.classList.remove('ambient-mode');
- $('#ambientToggle').textContent='AMBIENT DISPLAY';
+ document.body.classList.remove('ambient-mode');$('#ambientToggle').textContent='AMBIENT DISPLAY';
+ const dashboard=$('#home .dashboard');if(dashboard&&!dashboard.contains(ambientHero))dashboard.insertBefore(ambientHero,dashboard.firstChild);
 }
 $('#ambientToggle').addEventListener('click',()=>document.body.classList.contains('ambient-mode')?exitAmbient():enterAmbient());
 $('#ambientExit').addEventListener('click',exitAmbient);
-$('#fullscreenToggle').addEventListener('click',async()=>{
- try{
-  if(!document.fullscreenElement){await document.documentElement.requestFullscreen();$('#fullscreenToggle').textContent='EXIT FULLSCREEN'}
-  else{await document.exitFullscreen();$('#fullscreenToggle').textContent='FULLSCREEN'}
- }catch{$('#status').textContent='FULLSCREEN UNAVAILABLE'}
-});
+$('#fullscreenToggle').addEventListener('click',async()=>{try{if(!document.fullscreenElement){await document.documentElement.requestFullscreen();$('#fullscreenToggle').textContent='EXIT FULLSCREEN'}else{await document.exitFullscreen();$('#fullscreenToggle').textContent='FULLSCREEN'}}catch{$('#status').textContent='FULLSCREEN UNAVAILABLE'}});
 document.addEventListener('fullscreenchange',()=>{$('#fullscreenToggle').textContent=document.fullscreenElement?'EXIT FULLSCREEN':'FULLSCREEN'});
-$('#ambientTalk').addEventListener('click',()=>{
- exitAmbient();
- document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.view==='home'));
- document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='home'));
- $('#message').focus({preventScroll:true});
-});
-$('.eyewrap').addEventListener('click',()=>{if(document.body.classList.contains('ambient-mode'))$('#ambientTalk').click()});
-setInterval(updateAmbientClock,1000);
-updateAmbientClock();
+$('#ambientTalk').addEventListener('click',()=>{exitAmbient();$('#message').focus({preventScroll:true})});
+$('.eyewrap').addEventListener('click',()=>{if(document.body.classList.contains('ambient-mode')){exitAmbient();$('#message').focus({preventScroll:true})}});
+ambientHome.addEventListener('click',e=>{const b=e.target.closest('[data-amb-action]');if(!b)return;const action=b.dataset.ambAction;if(action==='chat'){exitAmbient();$('#message').focus({preventScroll:true});return}if(action==='timer'||action==='reminder'){exitAmbient();document.querySelector('#toolsPanel').scrollIntoView({behavior:'smooth'});setTimeout(()=>$(action==='timer'?'#timerLabel':'#reminderText').focus(),150);return}if(action==='weather'){const w=$('#ambientAgenda');return}exitAmbient();const nav=document.querySelector('nav [data-view="'+action+'"]');if(nav)nav.click()});
+setInterval(()=>{formatClock();if(document.body.classList.contains('ambient-mode'))renderAmbientLists()},15000);formatClock();
 
 apply();refresh();renderUtilities();messages.forEach(render);if(!messages.length)say('assistant','System online. MEK-AI build 0.5. Pixel face, chat, local memory, timers, and reminders are available. AI brain not connected yet.',false);$('#sleepToggle').onclick=()=>{sleeping=!sleeping;$('#sleepToggle').textContent=sleeping?'WAKE MEK-AI':'SLEEP MODE';setFace(sleeping?'sleep':'idle',sleeping?'SLEEP MODE':'SYSTEM STANDBY',sleeping?'LOW POWER // AWAITING INPUT':'PIXEL PERSONA // MK-I')};window.addEventListener('online',()=>$('#networkStatus').textContent='BROWSER ONLINE');window.addEventListener('offline',()=>$('#networkStatus').textContent='OFFLINE');$('#networkStatus').textContent=navigator.onLine?'BROWSER ONLINE':'OFFLINE';
 </script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
