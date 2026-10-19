@@ -138,7 +138,7 @@ body.ambient-mode .amb-row small{font-size:9px}
 <div class="amb-column amb-left">
 <div class="amb-panel"><div class="amb-head">LOCAL TIME <span>CHRONO // 01</span></div><div class="amb-content"><div class="amb-clock" id="ambientDashTime">--:--</div><div class="amb-date" id="ambientDashDate">LOADING DATE</div><div class="amb-greeting" id="ambientGreeting">SYSTEM READY // GOOD TO SEE YOU</div></div></div>
 <div class="amb-panel"><div class="amb-head">WEATHER <span id="weatherLocationLabel">AKRON, OH</span></div><div class="amb-content" id="weatherPanelContent"><div style="font-size:20px;color:var(--amber);margin-bottom:8px">CONNECTING TO SKY...</div><div class="amb-muted">Fetching current conditions and today’s forecast.</div></div></div>
-<div class="amb-panel"><div class="amb-head">TODAY <span>AGENDA</span></div><div class="amb-content" id="ambientAgenda"><div class="amb-muted">No reminders scheduled.</div></div></div>
+
 </div>
 <div class="amb-center" id="ambientFaceSlot"></div>
 <div class="amb-column amb-right">
@@ -233,8 +233,6 @@ function renderAmbientLists(){
  const active=rs.filter(r=>!r.done && (!r.at||new Date(r.at).getTime()>=now)).slice(0,4);
  const row=(label,sub)=>'<div class="amb-row"><span class="amb-dot"></span><div>'+escapeAmbient(label)+'<small>'+escapeAmbient(sub)+'</small></div></div>';
  $('#ambientReminders').innerHTML=active.length?active.map(r=>row(r.text||r.label||'Reminder',r.at?new Date(r.at).toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit'}):'UPCOMING')).join(''): '<div class="amb-muted">No active reminders. Add one with the quick tools.</div>';
- const agenda=active.slice(0,3).concat(ts.slice(0,1).map(t=>({text:t.label||'Active timer',at:t.endsAt||t.endAt})));
- $('#ambientAgenda').innerHTML=agenda.length?agenda.map(r=>row(r.text||r.label||'Scheduled item',r.at&&!isNaN(new Date(r.at))?new Date(r.at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'ON YOUR LIST')).join(''):'<div class="amb-muted">Nothing scheduled. Enjoy the quiet.</div>';
  $('#ambientMemoryStatus').textContent=memories.length+' NOTE'+(memories.length===1?'':'S')+' STORED';
  $('#ambientSysStatus').textContent=($('#coreStatus')?.textContent||'CORE NOMINAL')+' // '+($('#networkStatus')?.textContent||'BROWSER ONLINE');
 }
