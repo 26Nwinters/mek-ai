@@ -223,8 +223,9 @@ function startHandsFreeCapture(){
   fresh=fresh.trim();if(!fresh)return;
   const normalized=fresh.toLowerCase();
   if(!wakeWordDetected){
-   const match=normalized.match(/\bmecha\b[\s,.:;!?-]*(.*)/i);
-   if(!match){$('#voiceStatus').textContent='STANDBY. WAITING FOR “MECHA”.';return}
+   // Browser engines often transcribe invented wake words phonetically.
+   const match=normalized.match(/\b(?:mecha|mecca|mekka|meka|mech[a]?|meesha)\b[\s,.:;!?-]*(.*)/i);
+   if(!match){$('#voiceStatus').textContent='HEARD: “'+fresh+'” · WAITING FOR “MECHA”.';return}
    wakeWordDetected=true;wakeTranscript=(match[1]||'').trim();
    setFace('listening','WAKE WORD DETECTED','REQUEST CAPTURE // ACTIVE');
    $('#voiceStatus').textContent=wakeTranscript?'HEARING YOUR REQUEST...':'MECHA DETECTED. GO AHEAD...';
