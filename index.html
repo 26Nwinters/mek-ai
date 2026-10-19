@@ -74,6 +74,58 @@ body.ambient-mode #ambientDashboard .ambient-controls{display:none!important}
 body.ambient-mode .amb-center .hero{height:auto;min-height:0;width:100%;padding:14px 8px}
 body.ambient-mode .amb-center .eyewrap{width:min(35vh,22vw,310px);max-width:310px}
 body.ambient-mode .amb-center .ambient-clock,body.ambient-mode .amb-center .ambient-controls{display:none!important}
+
+/* Layout correction: fit the entire ambient dashboard to the viewport */
+body.ambient-mode{overflow:hidden!important}
+body.ambient-mode .app{height:100dvh!important;min-height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;padding:0!important;display:block!important}
+body.ambient-mode main{height:100dvh!important;min-height:0!important;max-height:100dvh!important;padding:0!important;overflow:hidden!important;display:block!important}
+body.ambient-mode #home{height:100%!important;min-height:0!important;display:block!important}
+body.ambient-mode #home>.dashboard{display:none!important}
+body.ambient-mode #ambientDashboard{box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,1.08fr) minmax(0,1fr);grid-template-rows:64px minmax(0,1fr) 66px;gap:12px;padding:12px 18px;width:100%;height:100dvh;min-height:0;max-height:100dvh;overflow:hidden}
+body.ambient-mode #ambientDashboard *{box-sizing:border-box}
+body.ambient-mode .amb-top{min-height:0;padding:4px 6px 10px}
+body.ambient-mode .amb-column{min-height:0;gap:12px;overflow:hidden}
+body.ambient-mode .amb-left,body.ambient-mode .amb-right{grid-row:2}
+body.ambient-mode .amb-panel{min-height:0;flex:1 1 0}
+body.ambient-mode .amb-panel .amb-content{min-height:0;overflow:hidden}
+body.ambient-mode .amb-clock{font-size:clamp(28px,3.2vw,54px);letter-spacing:0;white-space:nowrap}
+body.ambient-mode .amb-center{grid-row:2;grid-column:2;min-height:0;height:100%;overflow:hidden;justify-content:center}
+body.ambient-mode .amb-center .hero{flex:0 1 auto;min-height:0;height:auto;overflow:visible;padding:8px;width:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+body.ambient-mode .amb-center .eyewrap{width:min(34vh,20vw,270px);max-width:270px;max-height:38vh;margin:0 auto 8px}
+body.ambient-mode .amb-center .eyewrap svg{max-height:38vh;width:100%;height:auto}
+body.ambient-mode .amb-center .hero h2{margin:6px 0;font-size:clamp(12px,1.3vw,18px);line-height:1.2}
+body.ambient-mode .amb-center .hero p{margin:3px 0;font-size:9px}
+body.ambient-mode .amb-nameplate{position:relative;flex:none;margin-top:0;padding:8px 12px;min-width:65%;max-width:90%;font-size:14px}
+body.ambient-mode .amb-bottom{grid-row:3;grid-column:1/-1;min-height:0;max-height:66px;overflow:hidden;gap:10px}
+body.ambient-mode .amb-status{padding:8px 10px;overflow:hidden}
+body.ambient-mode .amb-status b{margin-bottom:4px}
+body.ambient-mode .amb-status span{font-size:10px}
+body.ambient-mode .amb-raccoon{width:58px;min-width:58px}
+body.ambient-mode .amb-raccoon svg{width:44px;height:38px}
+body.ambient-mode .amb-tools{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:8px}
+body.ambient-mode .amb-tool{min-height:0;height:clamp(48px,8vh,72px);padding:4px;font-size:9px;gap:3px}
+body.ambient-mode .amb-tool strong{font-size:17px}
+body.ambient-mode .amb-row{padding:6px 0;font-size:11px}
+body.ambient-mode .amb-row small{font-size:9px}
+@media(max-width:900px){
+ body.ambient-mode #ambientDashboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:52px minmax(180px,.85fr) minmax(180px,1fr) 58px;padding:8px;gap:8px;overflow:auto}
+ body.ambient-mode .amb-top{grid-row:1;grid-column:1/-1}
+ body.ambient-mode .amb-center{grid-row:2;grid-column:1/-1;min-height:180px}
+ body.ambient-mode .amb-left{grid-row:3;grid-column:1}
+ body.ambient-mode .amb-right{grid-row:3;grid-column:2}
+ body.ambient-mode .amb-bottom{grid-row:4;grid-column:1/-1;grid-template-columns:1fr 1fr;max-height:none}
+ body.ambient-mode .amb-raccoon{display:none}
+ body.ambient-mode .amb-center .eyewrap{width:min(22vh,28vw,180px)}
+ body.ambient-mode .amb-center .eyewrap svg{max-height:22vh}
+}
+@media(max-height:600px) and (min-width:901px){
+ body.ambient-mode #ambientDashboard{grid-template-rows:48px minmax(0,1fr) 52px;padding:7px 12px;gap:7px}
+ body.ambient-mode .amb-column{gap:7px}
+ body.ambient-mode .amb-center .eyewrap{width:min(28vh,17vw,210px)}
+ body.ambient-mode .amb-center .eyewrap svg{max-height:30vh}
+ body.ambient-mode .amb-bottom{max-height:52px}
+ body.ambient-mode .amb-status{padding:5px 8px}
+}
 </style></head><body><div class="authgate" id="authGate"><div class="authbox"><div class="brandmark" style="margin-bottom:16px">NW</div><h2>MEK-AI // ACCESS CONTROL</h2><p>Private operator login. Sign in with your existing MEK-AI Supabase email and password.</p><form id="authForm"><label for="authEmail">OPERATOR EMAIL</label><input id="authEmail" type="email" autocomplete="username" required><label for="authPassword">ACCESS PASSWORD</label><input id="authPassword" type="password" autocomplete="current-password" required><div class="authrow"><button class="primary" id="authSubmit" type="submit">AUTHENTICATE</button><button class="secondary hidden" id="authSignOut" type="button">SIGN OUT</button></div><div class="autherror" id="authError" role="status"></div></form><p class="authsmall">New account registration is disabled. Your AI key stays on the server.</p></div></div><div class="app hidden" id="mekApp"><header><div class="brand"><div class="brandmark">NW</div><div><h1 id="title">MEK-AI</h1><div class="sub">Personal systems interface</div></div></div><div class="headtools"><div class="status" id="status">LOCAL INTERFACE</div><button class="secondary display-toggle" id="ambientToggle" type="button">AMBIENT DISPLAY</button><button class="secondary display-toggle" id="fullscreenToggle" type="button">FULLSCREEN</button></div></header><nav><button class="active" data-view="home">Core</button><button data-view="memory">Memory</button><button data-view="settings">Settings</button></nav><main>
 <section class="view active" id="home"><div id="ambientDashboard" aria-label="MEK-AI ambient home dashboard">
 <div class="amb-top"><div><div class="amb-brand">MEK-AI</div><div class="amb-kicker">HOME ASSISTANT // PERSONAL SYSTEMS</div></div><div class="amb-kicker">SMARTER HOME&nbsp; // &nbsp;CALMER DAYS</div></div>
