@@ -8,7 +8,7 @@ import controller
 
 class ControllerTests(unittest.TestCase):
     def test_only_private_ipv4_ips_are_allowed(self):
-        self.assertTrue(controller.valid_lan_ip("192.168.12.202"))
+        self.assertTrue(controller.valid_lan_ip("192.168.1.50"))
         self.assertTrue(controller.valid_lan_ip("10.0.0.5"))
         self.assertFalse(controller.valid_lan_ip("127.0.0.1"))
         self.assertFalse(controller.valid_lan_ip("8.8.8.8"))
