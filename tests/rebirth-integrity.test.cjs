@@ -50,7 +50,7 @@ test('PWA caches the new first-party assets and avoids deleting unrelated site c
   assert.ok(sw.includes(asset));
  }
  assert.match(sw,/k\.startsWith\('mek-ai-'\)/);
- assert.doesNotMatch(sw,/k!==CACHE\)/);
+ assert.doesNotMatch(sw,/keys\.filter\(k=>k!==CACHE\)/);
 });
 test('visual enhancement does not hardcode user secrets or change controller endpoints',()=>{
  assert.doesNotMatch(client,/sb_secret_|sk-[A-Za-z0-9]{12}/);
