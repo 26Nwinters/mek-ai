@@ -101,8 +101,8 @@ if(wrap){
   currentState=state;
   const next={blink:1,tilt:0,jaw:0,wing:0,eyeGlow:1,y:0};
   if(state==='sleep'){next.blink=.04;next.eyeGlow=.14;next.y=-.09}
-  if(state==='listening'){next.blink=1.06;next.wing=.13;next.eyeGlow:1.18;next.tilt=.02}
-  if(state==='thinking'){next.blink=.68;next.tilt=-.075;next.eyeGlow:.78}
+  if(state==='listening'){next.blink=1.06;next.wing=.13;next.eyeGlow=1.18;next.tilt=.02}
+  if(state==='thinking'){next.blink=.68;next.tilt=-.075;next.eyeGlow=.78}
   if(state==='confused'){next.tilt=.12;next.wing=.22;next.blink=.72}
   if(state==='happy'){next.blink=.58;next.wing=-.11;next.eyeGlow=1.12;next.jaw=.09}
   if(state==='speaking'){next.jaw=.19;next.eyeGlow=1.04}
