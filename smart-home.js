@@ -199,7 +199,9 @@
     if (!operations.length) return null;
 
     // Do not hijack unrelated requests such as "turn off my computer".
-    const hasDeviceNoun = words.some(word => deviceTypeWords.has(word));
+    const hasDeviceNoun = words.some(word =>
+      deviceTypeWords.has(word) || /(?:lights?|lamps?|plugs?|outlets?)$/.test(word)
+    );
     const compactText = words.join('');
     const hasFullDeviceName = knownDevices.some(device => {
       const compactName = wordsOf(device.name).join('');
@@ -244,7 +246,8 @@
       // can still trigger the controller connection.
       const pendingWords = wordsOf(input);
       if (connected || !/\b(turn|switch|power)\b/.test(pendingWords.join(' ')) ||
-          !pendingWords.some(word => deviceTypeWords.has(word)) ||
+          !pendingWords.some(word =>
+            deviceTypeWords.has(word) || /(?:lights?|lamps?|plugs?|outlets?)$/.test(word)) ||
           !pendingWords.some(word => word === 'on' || word === 'off')) {
         return null;
       }
