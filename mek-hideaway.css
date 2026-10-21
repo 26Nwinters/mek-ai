@@ -1,0 +1,57 @@
+/* MEK-AI // THE HIDEAWAY - illustrated production theme */
+:root{--mek-ink:#090f0e;--mek-plate:#101815;--mek-plate2:#19231e;--mek-edge:#76603b;--mek-fog:#c4bea6;--mek-ivory:#e8ddbb;--mek-gold:#efb35d;--mek-copper:#ba7c3d;--line:#665435;--text:#e8ddbb;--muted:#aaa68d;--green:#a4c18b}
+body{background:linear-gradient(#07100dda,#07100df2),url('/mek-ai/ASSETS/Sunlit%20Overgrown%20Industrial%20Workshop.png') center/cover fixed;color:var(--text);font-family:'IBM Plex Mono',ui-monospace,monospace}
+body:before{opacity:.18!important}
+body .app{max-width:1740px}
+header{background:linear-gradient(90deg,#121b15ed,#111813c9),url('/mek-ai/ASSETS/Weathered%20Industrial%20Texture%20Atlas.png') center/cover;border:1px solid #6e5635;border-radius:4px;padding:14px 22px!important;margin-top:10px;box-shadow:inset 0 0 0 3px #080d0b,0 8px 28px #0008}
+.brandmark{background:#161d18!important;color:#edb65e!important}
+h1,.amb-brand{color:#f0c483!important;text-shadow:0 2px 12px #9c551b99}
+nav{justify-content:center;gap:9px!important}
+nav button,.secondary,.amb-tool{background:linear-gradient(#202922,#0d1412)!important;border:1px solid #655538!important;color:#d8c8a6!important;box-shadow:inset 0 1px #a3844238,0 3px 9px #0007}
+nav button.active,nav button:hover,.amb-tool:hover{border-color:#efb35d!important;color:#ffcf81!important;box-shadow:inset 0 0 18px #c881233b,0 0 13px #b8792440}
+.panel,.readout,.amb-panel,.amb-status,.hero{border:1px solid #78623e!important;border-radius:3px!important;background:linear-gradient(135deg,#18211bdc,#0b1210f5 78%)!important;box-shadow:inset 0 0 0 3px #090f0c,inset 0 0 0 4px #5b4b2d60,0 7px 18px #0008!important}
+.panelhead,.amb-head{background:linear-gradient(90deg,#222a1f,#121a15)!important;border-bottom:1px solid #685637!important;color:#f2b963!important;letter-spacing:.13em}
+.primary,.send{background:linear-gradient(#9a652c,#5a381a)!important;border:1px solid #f0b55e!important;color:#fff0c7!important;box-shadow:inset 0 1px #ffdc8b6b,0 0 14px #a9652640}
+input,textarea{background:#0b1210!important;border-color:#625236!important;color:#f0e0bf!important}
+body.ambient-mode .app{background:transparent!important}
+body.ambient-mode #ambientDashboard{background:linear-gradient(90deg,#070e0bdd,#070e0b88 45%,#070e0bdd),url('/mek-ai/ASSETS/Sunlit%20Overgrown%20Industrial%20Workshop.png') center/cover!important;border:8px solid #101914!important;outline:2px solid #6d5430;box-shadow:inset 0 0 0 3px #6c512b,0 0 70px #000!important}
+body.ambient-mode #ambientDashboard:before{content:"";position:absolute;inset:0;pointer-events:none;background:url('/mek-ai/ASSETS/Overgrown%20Steampunk%20Industrial%20Props%20Sheet.png') center top/100% auto no-repeat;opacity:.08}
+body.ambient-mode .amb-top{background:linear-gradient(90deg,#111a15ed,#1a2019da),url('/mek-ai/ASSETS/Weathered%20Industrial%20Texture%20Atlas.png') center/cover!important;border:1px solid #695638!important;padding:9px 17px!important;z-index:1}
+body.ambient-mode .amb-brand{font-family:'Barlow Condensed',Impact,sans-serif;font-size:clamp(32px,3.4vw,56px)!important;letter-spacing:.11em}
+body.ambient-mode .amb-column{z-index:1}
+body.ambient-mode .amb-panel{overflow:hidden!important;position:relative}
+body.ambient-mode .amb-panel:after{content:"";position:absolute;inset:3px;pointer-events:none;border:1px solid #b88b3830}
+body.ambient-mode .amb-head{padding:10px 13px!important;font-size:12px!important}
+body.ambient-mode .amb-content{padding:14px!important}
+body.ambient-mode .amb-clock{font-family:'Barlow Condensed',Impact,sans-serif!important;color:#ffe0a1!important;text-shadow:0 0 16px #c77b2c99;font-size:clamp(44px,4.5vw,74px)!important}
+body.ambient-mode .amb-center{background:linear-gradient(0deg,#090f0bbf,transparent 42%),url('/mek-ai/ASSETS/Sunlit%20Overgrown%20Industrial%20Workshop.png') center/cover!important;border:2px solid #80633c!important;box-shadow:inset 0 0 0 5px #101812,inset 0 0 45px #050805!important;overflow:hidden}
+body.ambient-mode .amb-center:before{inset:8px!important;border:1px solid #b48b483f!important;clip-path:none!important}
+body.ambient-mode .amb-center:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#07100b6b,transparent 30%,transparent 70%,#07100b88)}
+body.ambient-mode .amb-center .hero{z-index:2;position:relative;min-height:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+body.ambient-mode .amb-center .hero h2{color:#f5bd69!important;text-shadow:0 2px 10px #000}
+body.ambient-mode .amb-center .eyewrap{width:min(34vw,360px)!important;height:min(43vh,390px)!important;aspect-ratio:auto!important;position:relative;overflow:visible;filter:drop-shadow(0 12px 16px #000a)}
+body.ambient-mode .amb-center .eyewrap svg{opacity:0!important;pointer-events:none}
+.mek-portrait{position:absolute;inset:-12% -35% -4%;background:url('/mek-ai/ASSETS/Curious%20Amber-Eyed%20Hooded%20Android.png') center 43%/contain no-repeat;transition:transform .4s ease,filter .4s ease;filter:drop-shadow(0 0 18px #c68b3540);animation:mekBreath 6s ease-in-out infinite;pointer-events:none}
+@keyframes mekBreath{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(0deg)}}
+.mek-portrait[data-mood="listening"]{filter:drop-shadow(0 0 24px #ffc56b);transform:rotate(-3deg)}
+.mek-portrait[data-mood="thinking"]{filter:drop-shadow(0 0 12px #e7a24c) brightness(.92)}
+.mek-portrait[data-mood="speaking"]{animation:mekTalk .36s ease-in-out infinite alternate}
+.mek-portrait[data-mood="sleep"],.mek-portrait[data-mood="sleeping"]{filter:brightness(.4) saturate(.55);animation:none;transform:translateY(13px) rotate(5deg)}
+.mek-portrait[data-mood="happy"]{filter:drop-shadow(0 0 25px #ffc979) brightness(1.14)}
+@keyframes mekTalk{from{transform:translateY(0) rotate(-1deg)}to{transform:translateY(-3px) rotate(1deg)}}
+body:not(.ambient-mode) .eyewrap{position:relative}
+body:not(.ambient-mode) .eyewrap svg{opacity:0}
+body:not(.ambient-mode) .mek-portrait{inset:-16% -25% -12%}
+body.ambient-mode .amb-tools{gap:7px!important}
+body.ambient-mode .amb-tool{font-size:10px!important;min-height:67px!important;transition:transform .2s,border-color .2s}
+body.ambient-mode .amb-tool:hover{transform:translateY(-2px)}
+body.ambient-mode .amb-tool strong{color:#e9a44f!important}
+body.ambient-mode .amb-bottom{z-index:1}
+body.ambient-mode .amb-status{background:#111a16e8!important}
+body.ambient-mode .amb-raccoon{background:url('/mek-ai/ASSETS/Kawaii%20Raccoon%20Expression%20Sticker%20Sheet.png') 0 0/400% 100% no-repeat!important;opacity:.75}
+body.ambient-mode .amb-raccoon svg{opacity:0}
+body.ambient-mode .amb-greeting{color:#e9b96e}
+body.ambient-mode .amb-quote{font-style:italic}
+body.ambient-mode .amb-panel .amb-muted{color:#c4b99c}
+@media(max-width:900px){body.ambient-mode .amb-center .eyewrap{width:min(70vw,320px)!important;height:320px!important}body.ambient-mode #ambientDashboard{background-attachment:scroll!important}}
+@media(prefers-reduced-motion:reduce){.mek-portrait{animation:none!important;transition:none!important}}
