@@ -67,6 +67,32 @@ def kasa_binary():
     raise RuntimeError("python-kasa was not found. Check ~/tapo-test/bin/kasa")
 
 
+def kasa_failure_hint(stdout, stderr):
+    """Return a safe, specific hint without exposing device output or credentials."""
+    details = (str(stdout or "") + "\n" + str(stderr or "")).lower()
+    if any(key in details for key in (
+        "did not match our challenge", "authentication failed", "authenticationerror",
+        "unknown_credentials", "invalid credentials", "incorrect password",
+        "login failed", "invalid username", "unauthorized"
+    )):
+        return ("Tapo authentication failed. Double-check the case-sensitive Tapo email "
+                "and password saved during setup. If they are correct, the plug's "
+                "firmware or third-party compatibility settings may be blocking the login.")
+    if any(key in details for key in (
+        "network is unreachable", "host is unreachable", "no route to host",
+        "connect call failed", "connection refused", "unable to connect",
+        "connection reset", "cannot connect"
+    )):
+        return ("The plug cannot be reached at its saved IP address. Check the "
+                "plug's current IP in Tapo, Wi-Fi, and power.")
+    if "timed out" in details or "timeout" in details:
+        return ("The plug did not respond in time. Check its power, Wi-Fi, and IP address.")
+    if "no such device" in details or "device not found" in details:
+        return ("No compatible plug was found at that IP address. Check its IP in Tapo.")
+    return ("The plug command failed, but kasa did not report a recognizable reason. "
+            "Use the local diagnostic in the setup guide to identify the cause.")
+
+
 def execute_kasa(config, device, action):
     """Only known devices and the on/off/state commands are accepted."""
     if action not in ("on", "off", "state"):
@@ -84,8 +110,8 @@ def execute_kasa(config, device, action):
     except OSError as exc:
         raise RuntimeError("Cannot start the local Tapo command.") from exc
     if completed.returncode:
-        # Do not expose subprocess output: it can contain device identifiers or network data.
-        raise RuntimeError("Plug command failed. Check its IP, Wi-Fi and Tapo credentials.")
+        # Classify locally; never return raw kasa output, which can contain identifiers.
+        raise RuntimeError(kasa_failure_hint(completed.stdout, completed.stderr))
     if action != "state":
         return action
     matched = re.search(r"\bDevice state:\s*(True|False)\b", completed.stdout, re.I)
