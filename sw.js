@@ -1,5 +1,5 @@
 /* MEK-AI Rebirth — cache local application files, not account or controller responses. */
-const CACHE='mek-ai-atelier-2026-10-21-v4';
+const CACHE='mek-ai-atelier-2026-10-21-v5';
 const SHELL=[
  '/mek-ai/','/mek-ai/index.html','/mek-ai/manifest.webmanifest','/mek-ai/icon.svg',
  '/mek-ai/mek-rebirth.css','/mek-ai/mek-rebirth.js','/mek-ai/mek-atelier.css','/mek-ai/mek-atelier.js','/mek-ai/smart-home.js'
