@@ -527,3 +527,25 @@ body.ambient-mode .at-msg b{font-size:10px}
  body.ambient-mode .at-scene-kicker{font-size:9px}
  body.ambient-mode .at-scene-id{font-size:8px}
 }
+
+
+/* Compact desktop/wall display: prevent minimum tracks from overflowing. */
+@media(max-height:760px) and (min-width:901px){
+ body.ambient-mode #ambientDashboard{
+   overflow-y:auto!important;grid-template-rows:70px minmax(465px,1fr) 60px!important
+ }
+ body.ambient-mode .amb-right{
+   grid-template-rows:minmax(166px,.96fr) minmax(96px,.58fr) minmax(190px,1.1fr)!important
+ }
+ body.ambient-mode .amb-left{
+   grid-template-rows:minmax(118px,.8fr) minmax(170px,1.1fr) minmax(135px,.84fr)!important
+ }
+ body.ambient-mode .amb-column{min-height:465px!important}
+ body.ambient-mode .amb-right #atelierHousePanel .at-house-row{min-height:40px!important}
+ body.ambient-mode #atelierHousePanel .amb-content{padding:3px 11px!important}
+ body.ambient-mode .amb-tools{gap:4px!important;padding:6px!important}
+}
+@media(max-height:620px) and (min-width:901px){
+ body.ambient-mode #ambientDashboard{grid-template-rows:64px minmax(465px,1fr) 58px!important}
+ body.ambient-mode .amb-center>.at-stage-avatar{bottom:170px!important}
+}
