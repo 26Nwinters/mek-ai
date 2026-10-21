@@ -63,6 +63,14 @@ test('illustration, expression sheets, live data and real controls are wired',()
  assert.match(view,/atTalkButton/);
  assert.doesNotMatch(view,/fetch\(['"]http/);
 });
+test('character stays visible when the legacy face wrapper collapses',()=>{
+ assert.match(view,/make\('div', 'at-avatar at-stage-avatar', slot\)/);
+ assert.match(view,/make\('div', 'at-avatar at-inline-avatar', wrap\)/);
+ assert.match(view,/inlineAvatar\.dataset\.mood=mood/);
+ assert.match(style,/body\.ambient-mode \.amb-center>\.at-stage-avatar/);
+ assert.match(style,/body\.ambient-mode \.amb-center>\.hero\{display:none!important\}/);
+ assert.match(style,/body\.ambient-mode \.amb-right\{/);
+});
 test('PWA shell version tracks the final files and avoids caching secrets',()=>{
  for(const asset of ['mek-rebirth.css','mek-rebirth.js','mek-atelier.css','mek-atelier.js','smart-home.js']){
   assert.ok(sw.includes(asset),asset+' in shell');
