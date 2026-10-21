@@ -34,6 +34,21 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual(kwargs["env"]["KASA_USERNAME"], "test@example.com")
         self.assertEqual(kwargs["env"]["KASA_PASSWORD"], "not-real")
 
+    def test_auth_failure_classification_does_not_echo_secrets(self):
+        diagnostic = controller.kasa_failure_hint(
+            "", "Device response did not match our challenge on ip 192.168.1.50"
+        )
+        self.assertIn("authentication failed", diagnostic.lower())
+        self.assertNotIn("192.168.1.50", diagnostic)
+
+    def test_unreachable_failure_classification(self):
+        diagnostic = controller.kasa_failure_hint("", "Connect call failed")
+        self.assertIn("cannot be reached", diagnostic)
+
+    def test_unknown_failure_never_echoes_raw_output(self):
+        diagnostic = controller.kasa_failure_hint("", "unexpected email or token: SECRET")
+        self.assertNotIn("SECRET", diagnostic)
+
     def test_failed_commands_do_not_fake_success(self):
         config = {"email": "test@example.com", "password": "not-real"}
         device = {"ip": "192.168.1.50", "name": "Test", "id": "test"}
