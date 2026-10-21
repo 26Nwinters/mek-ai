@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="48" fill="#090b0b"/><path d="M64 150h384v212H64z" fill="#101411" stroke="#f28a27" stroke-width="12"/><path d="M100 256h54l30-54 44 108 48-108 40 108 30-54h66" fill="none" stroke="#f5bd58" stroke-width="18" stroke-linejoin="round"/><text x="256" y="420" font-family="monospace" font-size="50" font-weight="bold" text-anchor="middle" fill="#f28a27">MEK-AI</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MEK-AI angular robotic insignia">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#313b3d"/><stop offset="1" stop-color="#11191e"/></linearGradient><linearGradient id="a" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff0ba"/><stop offset=".55" stop-color="#ffb15c"/><stop offset="1" stop-color="#b35f31"/></linearGradient></defs>
+<rect width="512" height="512" rx="58" fill="#090d11"/>
+<path d="M150 58L256 25L362 58L430 145L414 316L336 414L256 475L176 414L98 316L82 145Z" fill="#0c151a" stroke="#bf8e55" stroke-width="12"/>
+<path d="M164 101L256 64L348 101L389 157L367 301L311 381L256 420L201 381L145 301L123 157Z" fill="url(#g)" stroke="#5b635e" stroke-width="6"/>
+<path d="M158 198L213 169L255 187L299 169L354 198L361 266L303 294L256 313L209 294L151 266Z" fill="#11191e" stroke="#976d44" stroke-width="6"/>
+<path d="M155 218L215 207L243 222L225 247L172 255Z M357 218L297 207L269 222L287 247L340 255Z" fill="url(#a)"/>
+<path d="M222 305L256 292L290 305L308 359L256 401L204 359Z" fill="#273037" stroke="#bd9562" stroke-width="6"/>
+<path d="M227 349H285" stroke="#eab16b" stroke-width="7"/>
+<path d="M214 105L256 84L298 105L285 150L256 162L227 150Z" fill="#b48a58"/>
+<path d="M250 107H262V148H250Z" fill="#201a17"/>
+</svg>
