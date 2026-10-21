@@ -1,8 +1,8 @@
 /* MEK-AI Rebirth — cache local application files, not account or controller responses. */
-const CACHE='mek-ai-rebirth-2026-10';
+const CACHE='mek-ai-hideaway-2026-10-21';
 const SHELL=[
  '/mek-ai/','/mek-ai/index.html','/mek-ai/manifest.webmanifest','/mek-ai/icon.svg',
- '/mek-ai/mek-rebirth.css','/mek-ai/mek-rebirth.js','/mek-ai/mek-avatar3d.js','/mek-ai/smart-home.js'
+ '/mek-ai/mek-rebirth.css','/mek-ai/mek-rebirth.js','/mek-ai/mek-hideaway.css','/mek-ai/mek-hideaway.js','/mek-ai/smart-home.js'
 ];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
