@@ -447,7 +447,7 @@ $('#importFile').onchange=async e=>{try{const d=JSON.parse(await e.target.files[
 /* Ambient dashboard rendering and navigation */
 const ambientHome=$('#ambientDashboard'),ambientHero=$('.hero');
 const ambientSlot=$('#ambientFaceSlot');
-function formatClock(){const d=new Date();$('#ambientDashTime').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});$('#ambientDashDate').textContent=d.toLocaleDateString([], {weekday:'long',month:'short',day:'numeric'}).toUpperCase();$('#ambientTime').textContent=$('#ambientDashTime').textContent;$('#ambientDate').textContent=$('#ambientDashDate').textContent;const h=d.getHours();$('#ambientGreeting').textContent=(h<12?'GOOD MORNING':h<17?'GOOD AFTERNOON':'GOOD EVENING')+' // SYSTEM STANDBY';}
+function formatClock(){const d=new Date();$('#ambientDashTime').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});$('#ambientDashDate').textContent=d.toLocaleDateString([], {weekday:'long',month:'short',day:'numeric'}).toUpperCase();$('#ambientTime').textContent=$('#ambientDashTime').textContent;$('#ambientDate').textContent=$('#ambientDashDate').textContent;const h=d.getHours();$('#ambientGreeting').textContent=(h<5?'LATE NIGHT CREW':h<12?'GOOD MORNING':h<17?'GOOD AFTERNOON':'GOOD EVENING')+(h<5?' // STILL AWAKE? IMPRESSIVE.':' // SYSTEM STANDBY');}
 function safeLocalList(k){const v=get(k,[]);return Array.isArray(v)?v:[]}
 function renderAmbientLists(){
  const rs=safeLocalList('reminders'),ts=safeLocalList('timers'),now=Date.now();
