@@ -152,47 +152,115 @@
     report('Pairing token forgotten in this browser. The local controller was not changed.');
   });
 
+  // Speech recognition often turns "Mecha" into "Mecca", and treats
+  // "Growlight" as two words. Normalize both spoken requests and device names.
+  const deviceTypeWords = new Set([
+    'light', 'lights', 'lamp', 'lamps', 'plug', 'plugs', 'outlet', 'outlets'
+  ]);
+  const commandWords = new Set([
+    'hey', 'hi', 'hello', 'yo', 'ok', 'okay', 'mecha', 'mecca', 'mekka',
+    'meka', 'mech', 'meesha', 'misha', 'meshah', 'mechuh', 'meca', 'mek',
+    'ai', 'please', 'can', 'could', 'would', 'will', 'you', 'your', 'i',
+    'me', 'want', 'to', 'turn', 'switch', 'power', 'on', 'off', 'my',
+    'the', 'a', 'an', 'for', 'in', 'of', 'and', 'it', 'that', 'this',
+    'home', 'all', 'up', 'down', ...deviceTypeWords
+  ]);
+
+  function wordsOf(value) {
+    return String(value || '')
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .toLowerCase()
+      .replace(/['’]s\b/g, '')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  }
+
+  function aliasesOf(device) {
+    const words = wordsOf(device.name);
+    const aliases = new Set(words);
+    // Recognize names that combine a description and a device noun:
+    // "Growlight" matches "grow light"; "Growlights" matches "grow lights".
+    const combined = words.join('');
+    if (combined) aliases.add(combined);
+    for (const word of words) {
+      const stem = word.replace(/(lights?|lamps?|plugs?|outlets?)$/, '');
+      if (stem && stem !== word) aliases.add(stem);
+    }
+    return aliases;
+  }
+
+  function resolveDeviceCommand(input, knownDevices) {
+    const words = wordsOf(input);
+    const text = words.join(' ');
+    if (!/\b(turn|switch|power)\b/.test(text)) return null;
+    const operations = [...new Set(words.filter(word => word === 'on' || word === 'off'))];
+    if (!operations.length) return null;
+
+    // Do not hijack unrelated requests such as "turn off my computer".
+    const hasDeviceNoun = words.some(word => deviceTypeWords.has(word));
+    const compactText = words.join('');
+    const hasFullDeviceName = knownDevices.some(device => {
+      const compactName = wordsOf(device.name).join('');
+      return compactName.length >= 3 && compactText.includes(compactName);
+    });
+    if (!hasDeviceNoun && !hasFullDeviceName) return null;
+    if (operations.length > 1) {
+      return { error: 'Please give me one on or off command at a time.' };
+    }
+
+    const descriptors = words.filter(word => !commandWords.has(word));
+    const matching = knownDevices.filter(device => {
+      const aliases = aliasesOf(device);
+      return descriptors.every(word => aliases.has(word));
+    });
+    if (matching.length === 1) return { device: matching[0], action: operations[0] };
+    if (matching.length === 0) {
+      return {
+        error: "I don't know that light yet. The configured plugs are: " +
+          knownDevices.map(device => device.name).join(', ') + '.'
+      };
+    }
+    return {
+      error: 'Which light? Say the name of one plug: ' +
+        matching.map(device => device.name).join(', ') + '.'
+    };
+  }
+
+  // Export only the pure matcher for offline regression tests.
+  // This function cannot operate plugs on its own.
+  window.mekResolveDeviceCommand = resolveDeviceCommand;
+
   // This is called from the existing chat/voice path BEFORE the remote AI.
   // Device actions are deterministic; no LLM receives a device-control capability.
   window.mekSmartHomeIntent = async function (input) {
-    const text = String(input || '').toLowerCase().replace(/[^\w\s-]/g, ' ').replace(/\s+/g, ' ').trim();
-    if (!/\b(turn|switch|power)\b/.test(text) || !/\b(lights?|lamps?|plugs?|outlets?)\b/.test(text)) {
-      return null;
+    // Recognize the intent before opening a connection, so unrelated chat
+    // requests still go to the AI rather than the smart-home controller.
+    const preliminary = resolveDeviceCommand(input, devices);
+    if (preliminary === null) {
+      // When we have not connected yet, a device-name-only phrase like
+      // "turn on Growlight" is not recognizable. A standard "light" phrase
+      // can still trigger the controller connection.
+      const pendingWords = wordsOf(input);
+      if (connected || !/\b(turn|switch|power)\b/.test(pendingWords.join(' ')) ||
+          !pendingWords.some(word => deviceTypeWords.has(word)) ||
+          !pendingWords.some(word => word === 'on' || word === 'off')) {
+        return null;
+      }
     }
-    const operations = Array.from(new Set((text.match(/\b(on|off)\b/g) || [])));
-    if (!operations.length) return null;
-    if (operations.length > 1) return 'Please give me one on or off command at a time.';
-
     if (!connected) {
       const ready = await connect();
       if (!ready) return 'Home control is unavailable. ' + message.textContent;
     }
-    const stopWords = new Set([
-      'turn', 'switch', 'power', 'on', 'off', 'my', 'the', 'a', 'an', 'all',
-      'mecha', 'mek', 'ai', 'please', 'can', 'could', 'would', 'you', 'i',
-      'want', 'to', 'for', 'in', 'of', 'and', 'it', 'that', 'this', 'home',
-      'light', 'lights', 'lamp', 'lamps', 'plug', 'plugs', 'outlet', 'outlets'
-    ]);
-    const descriptors = text.split(/\s+/).filter(word => word && !stopWords.has(word));
-    const matching = devices.filter(device => {
-      const deviceWords = device.name.toLowerCase().split(/[^a-z0-9]+/);
-      return descriptors.every(word => deviceWords.includes(word));
-    });
-
-    let device = null;
-    if (matching.length === 1) {
-      device = matching[0];
-    } else if (!descriptors.length && devices.length === 1) {
-      device = devices[0];
-    } else if (!matching.length) {
-      return "I don't know that light yet. The configured plugs are: " + devices.map(d => d.name).join(', ') + '.';
-    } else {
-      return 'Which light? Say the name of one plug: ' + matching.map(d => d.name).join(', ') + '.';
-    }
+    const parsed = resolveDeviceCommand(input, devices);
+    if (parsed === null) return null;
+    if (parsed.error) return parsed.error;
 
     try {
-      const result = await request('/v1/devices/' + encodeURIComponent(device.id) + '/' + operations[0], 'POST');
-      report(device.name + ' switched ' + result.state + '.', true);
+      const result = await request('/v1/devices/' +
+        encodeURIComponent(parsed.device.id) + '/' + parsed.action, 'POST');
+      report(parsed.device.name + ' switched ' + result.state + '.', true);
       void loadStates();
       return result.name + ' is now ' + result.state + '.';
     } catch (error) {
