@@ -62,13 +62,24 @@
 
     // Preserve original state-bearing SVG in the DOM; only replace its artwork.
     // The same state changes still drive voice feedback throughout the app.
-    const avatar = make('div', 'at-avatar', wrap);
-    avatar.dataset.mood = 'idle';
-    const portrait = make('img', '', avatar);
-    portrait.alt = 'MEK-AI, the amber-eyed robot in his worn hooded jacket';
-    portrait.src = '/mek-ai/ASSETS/Curious%20Amber-Eyed%20Hooded%20Android.png';
-    portrait.loading = 'eager'; portrait.decoding = 'async';
-    make('div', 'at-avatar-pose', avatar).setAttribute('aria-hidden','true');
+    // Mount the artwork in the SCENE, not inside the old SVG face wrapper.
+    // The old wrapper can collapse to zero height when its contents are absolute.
+    // Keep a separate portrait inside the standard dashboard's face container.
+    const avatar = make('div', 'at-avatar at-stage-avatar', slot);
+    const inlineAvatar = make('div', 'at-avatar at-inline-avatar', wrap);
+    const portraitUrl = '/mek-ai/ASSETS/Curious%20Amber-Eyed%20Hooded%20Android.png';
+    for (const target of [avatar, inlineAvatar]) {
+      target.dataset.mood = 'idle';
+      const portrait = make('img', '', target);
+      portrait.alt = 'MEK-AI, the amber-eyed robot in his worn hooded jacket';
+      portrait.src = portraitUrl;
+      portrait.loading = 'eager'; portrait.decoding = 'async';
+      make('div', 'at-avatar-pose', target).setAttribute('aria-hidden','true');
+      portrait.addEventListener('error', () => {
+        target.classList.add('at-art-unavailable');
+        target.setAttribute('aria-label', 'MEK-AI character art failed to load');
+      });
+    }
     const oldArt = wrap.querySelector('.mek-portrait');
     if (oldArt) oldArt.remove();
     const oldGlow = wrap.querySelector('.mek-eye-glow');
@@ -158,7 +169,7 @@
     let lastMood='';
     const updateMood=()=>{
       const mood=getMood();if(mood===lastMood)return;
-      lastMood=mood;avatar.dataset.mood=mood;
+      lastMood=mood;avatar.dataset.mood=mood;inlineAvatar.dataset.mood=mood;
       const stage=$('#atCommsState');
       if(stage)stage.textContent=({
         listening:'LISTENING',thinking:'PROCESSING',speaking:'RESPONDING',sleep:'LOW POWER',
