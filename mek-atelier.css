@@ -549,3 +549,85 @@ body.ambient-mode .at-msg b{font-size:10px}
  body.ambient-mode #ambientDashboard{grid-template-rows:64px minmax(465px,1fr) 58px!important}
  body.ambient-mode .amb-center>.at-stage-avatar{bottom:170px!important}
 }
+
+
+/* v2.2 — Character-first layout.
+   Remove redundant information blocks, not their underlying functionality.
+   Keep memory features in the Memory tab, and live smart-home state inside House. */
+.ambient-data-cache[hidden]{display:none!important}
+body:not(.ambient-mode) #home .dashboard>.readouts{display:none!important}
+body.ambient-mode #atelierStatusPanel,
+body.ambient-mode #hideawaySystem,
+body.ambient-mode .amb-bottom{display:none!important}
+@media(min-width:901px){
+  body.ambient-mode #ambientDashboard{
+    grid-template-columns:minmax(215px,.76fr) minmax(450px,2.02fr) minmax(250px,1.06fr)!important;
+    grid-template-rows:80px minmax(0,1fr)!important;
+    gap:12px!important;
+  }
+  body.ambient-mode .amb-left{
+    grid-column:1!important;grid-row:2!important;
+    display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+    align-items:stretch!important;gap:12px!important;min-height:0!important;
+  }
+  body.ambient-mode .amb-left>.amb-panel{flex:0 0 auto!important;min-height:0!important}
+  body.ambient-mode .amb-left>.amb-panel:first-child{
+    height:clamp(180px,30%,230px)!important;
+  }
+  body.ambient-mode .amb-left>.amb-panel:nth-child(2){
+    height:clamp(215px,39%,300px)!important;
+  }
+  body.ambient-mode .amb-center{
+    grid-column:2!important;grid-row:2!important;
+    grid-template-rows:minmax(0,1fr) minmax(175px,.4fr)!important;
+  }
+  body.ambient-mode .amb-right{grid-column:3!important;grid-row:2!important}
+  body.ambient-mode .amb-clock{
+    font-size:clamp(37px,3.35vw,54px)!important;
+    letter-spacing:.025em!important;
+  }
+  body.ambient-mode .amb-panel .amb-content{min-width:0}
+}
+@media(min-width:901px) and (max-width:1150px){
+  body.ambient-mode #ambientDashboard{
+    grid-template-columns:minmax(180px,.77fr) minmax(350px,1.9fr) minmax(214px,.94fr)!important;
+    gap:9px!important;
+  }
+  body.ambient-mode .amb-clock{font-size:clamp(34px,3.25vw,45px)!important}
+  body.ambient-mode .amb-left{gap:9px!important}
+}
+@media(min-width:901px) and (max-height:760px){
+  body.ambient-mode #ambientDashboard{
+    grid-template-rows:70px minmax(455px,1fr)!important;
+    overflow-y:auto!important;
+  }
+  body.ambient-mode .amb-left>.amb-panel:first-child{height:180px!important}
+  body.ambient-mode .amb-left>.amb-panel:nth-child(2){height:215px!important}
+}
+@media(min-width:901px) and (max-height:620px){
+  body.ambient-mode #ambientDashboard{grid-template-rows:64px minmax(455px,1fr)!important}
+}
+@media(max-width:900px){
+  body.ambient-mode #ambientDashboard{
+    grid-template-rows:auto auto auto!important;
+  }
+  body.ambient-mode .amb-left{
+    display:flex!important;flex-direction:column!important;gap:10px!important;
+    min-height:0!important;
+  }
+  body.ambient-mode .amb-left>.amb-panel{
+    flex:0 0 auto!important;height:auto!important;
+  }
+  body.ambient-mode .amb-left>.amb-panel:first-child{min-height:170px!important}
+  body.ambient-mode .amb-left>.amb-panel:nth-child(2){min-height:200px!important}
+  body.ambient-mode .amb-center{grid-template-rows:minmax(300px,1fr) 190px!important}
+  body.ambient-mode .amb-bottom{display:none!important}
+}
+@media(max-width:600px){
+  body.ambient-mode .amb-center{
+    grid-template-rows:300px 195px!important;
+    min-height:495px!important;
+  }
+  body.ambient-mode .amb-left>.amb-panel:first-child{min-height:165px!important}
+  body.ambient-mode .amb-left>.amb-panel:nth-child(2){min-height:205px!important}
+}
