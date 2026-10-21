@@ -1,0 +1,425 @@
+/* MEK-AI / THE HIDEAWAY — approved illustrated console v2
+   Built above the legacy UI without changing application IDs or command handlers. */
+:root{
+ --hide-bg:#09100d;--hide-well:#0c1411;--hide-plate:#141d17;
+ --hide-line:#7c6036;--hide-light:#f1bb6e;--hide-cream:#eadcba;
+ --hide-muted:#b9ae95;--hide-green:#b9d59d;
+ --mek-ink:#080e0c;--mek-plate:#111a15;--mek-plate2:#1d281e;--mek-edge:#775c34;
+ --mek-ivory:#eddfbd;--mek-gold:#f0b664;--mek-copper:#ba7d46;
+ --line:#655334;--text:#e8debf;--muted:#b8ac8e;--green:#acd293
+}
+html{background:#0b100d}
+body{
+ background:linear-gradient(180deg,#080d0bc9,#0a120de8),
+ url('/mek-ai/ASSETS/Sunlit%20Overgrown%20Industrial%20Workshop.png') center/cover fixed;
+ color:var(--hide-cream);
+}
+body:before{opacity:.12!important;z-index:3!important}
+body .app{max-width:1800px}
+header,body:not(.ambient-mode) .panel,body:not(.ambient-mode) .hero,body:not(.ambient-mode) .readout{
+ background:linear-gradient(135deg,#1c261deb,#0a120fef 72%)!important;
+ border:1px solid #84683d!important;border-radius:3px!important;
+ box-shadow:inset 0 0 0 3px #101711,inset 0 0 0 4px #aa854036,0 12px 38px #0008!important
+}
+body:not(.ambient-mode) header{margin-top:12px;padding:16px 20px!important}
+h1,.amb-brand{color:#f5c987!important}
+body:not(.ambient-mode) nav button.active{border-color:#d69c55!important;color:#f5c881!important}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffc879!important;outline-offset:3px}
+
+/* Fullscreen-style home console */
+body.ambient-mode,body.ambient-mode .app{background:#0b130f!important}
+body.ambient-mode .app{max-width:1920px!important;padding:0!important}
+body.ambient-mode #ambientDashboard{
+ --rim:#77572e;
+ position:relative;isolation:isolate;
+ display:grid!important;
+ grid-template-columns:minmax(220px,1.02fr) minmax(390px,1.56fr) minmax(245px,1.06fr)!important;
+ grid-template-rows:84px minmax(0,1fr) 69px!important;
+ gap:11px!important;
+ padding:12px 14px!important;
+ width:100%!important;height:100dvh!important;max-height:100dvh!important;
+ min-height:0!important;overflow:hidden!important;
+ border:8px solid #0b130f;
+ outline:2px solid #856333;outline-offset:-6px;
+ background:
+ linear-gradient(90deg,#061009db,#09110b52 44%,#061009db),
+ linear-gradient(0deg,#030805a6,transparent 45%),
+ url('/mek-ai/ASSETS/Sunlit%20Overgrown%20Industrial%20Workshop.png') center/cover!important;
+ box-shadow:inset 0 0 0 2px #725832,inset 0 0 95px #000d!important
+}
+body.ambient-mode #ambientDashboard:before{
+ content:"";position:absolute;inset:5px;pointer-events:none;z-index:0;
+ border:1px solid #c2904e44;
+ background:
+ radial-gradient(ellipse at 50% 0%,#a36a2520,transparent 64%),
+ repeating-linear-gradient(0deg,transparent 0 4px,#ffc26a04 5px);
+}
+body.ambient-mode #ambientDashboard>*{z-index:1;min-width:0}
+
+/* Top engraved header: brand, working navigation, connection indicators */
+body.ambient-mode .amb-top{
+ grid-column:1/-1;grid-row:1;min-height:0!important;
+ display:grid!important;grid-template-columns:minmax(180px,1fr) auto minmax(174px,1fr);
+ align-items:center;gap:14px!important;
+ margin:0;padding:10px 18px!important;
+ border:1px solid #896538!important;
+ border-radius:3px;
+ background:linear-gradient(175deg,#1b261cfa,#0a110de9 75%)!important;
+ box-shadow:inset 0 0 0 3px #0a110d,inset 0 0 0 4px #b28d4740,0 5px 18px #000a;
+}
+body.ambient-mode .amb-top>.amb-kicker{display:none!important}
+body.ambient-mode .amb-top>div:first-child{min-width:0}
+body.ambient-mode .amb-brand{
+ font-family:'Barlow Condensed','Arial Narrow',sans-serif;
+ font-size:clamp(32px,3.25vw,53px)!important;line-height:.91;font-weight:800;
+ letter-spacing:.085em!important;color:#f3c887;
+ text-shadow:0 2px 12px #d27d3466;
+}
+body.ambient-mode .amb-top .amb-kicker{font-size:9px!important;letter-spacing:.16em!important;color:#b2aa8b;margin-top:6px!important}
+.atelier-tabs{display:flex;align-items:center;gap:6px;justify-content:center;min-width:0}
+.atelier-tabs button{
+ min-width:82px;min-height:40px;padding:9px 13px;
+ font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+ border:1px solid #726043;border-radius:3px;
+ color:#c8bb9b;background:linear-gradient(#19221b,#0c1511);
+ box-shadow:inset 0 1px #a1813c30,0 3px 8px #0008;cursor:pointer
+}
+.atelier-tabs button:hover,.atelier-tabs button:focus-visible{
+ border-color:#f1b766;color:#f6d7a2;background:#30251a
+}
+.atelier-tabs button.active{color:#ffe0a9;border-color:#e7a24c;background:linear-gradient(#56381d,#241c12);box-shadow:0 0 18px #d68d3c52,inset 0 0 0 1px #ffc57d36}
+.atelier-connection{text-align:right;font-size:9px;letter-spacing:.13em;line-height:1.9;color:#bcb59a}
+.atelier-connection b{font-weight:600;color:#c4d69b}
+.atelier-connection .at-live{width:7px;height:7px;border-radius:50%;display:inline-block;background:#b2ce86;box-shadow:0 0 8px #9cb76b;margin-right:6px}
+.atelier-connection .at-small{color:#b1a083}
+
+/* Columns: no clipped cards; room for full tool rows at laptop heights */
+body.ambient-mode .amb-column{
+ min-height:0!important;min-width:0;display:grid!important;gap:10px!important;overflow:visible!important
+}
+body.ambient-mode .amb-left{grid-column:1;grid-row:2;grid-template-rows:minmax(142px,1fr) minmax(169px,1.04fr) minmax(141px,.9fr)}
+body.ambient-mode .amb-right{grid-column:3;grid-row:2;grid-template-rows:minmax(146px,.85fr) minmax(135px,.82fr) minmax(205px,1.28fr)}
+body.ambient-mode .amb-panel{
+ min-width:0;min-height:0!important;overflow:hidden!important;display:flex;flex-direction:column;
+ border:1px solid #87683a!important;border-radius:2px!important;
+ background:linear-gradient(145deg,#16201af5,#0a1210f5 83%)!important;
+ box-shadow:inset 0 0 0 3px #0b1210,inset 0 0 0 4px #a17e3e2f,0 8px 22px #0008!important
+}
+body.ambient-mode .amb-panel:after{inset:4px!important;border:1px solid #9c79301c}
+body.ambient-mode .amb-head{
+ flex:none;display:flex;align-items:center;justify-content:space-between;
+ gap:8px;min-height:36px!important;margin:0!important;padding:8px 12px!important;
+ font-size:11px!important;font-weight:bold;letter-spacing:.16em!important;
+ border-bottom:1px solid #655235!important;
+ background:linear-gradient(90deg,#1a291f,#111913)!important;color:#f2b660!important
+}
+body.ambient-mode .amb-head span{font-size:9px!important;letter-spacing:.09em!important;font-weight:400;color:#b8af92!important;text-align:right}
+body.ambient-mode .amb-content{flex:1;min-height:0;overflow:auto;padding:12px 13px!important;scrollbar-width:thin}
+body.ambient-mode .amb-clock{font-size:clamp(38px,4.1vw,70px)!important;white-space:nowrap;line-height:1.08!important;color:#ffe0a0!important;font-family:'Barlow Condensed',Impact,sans-serif!important;font-weight:700;letter-spacing:.035em!important;text-shadow:0 0 18px #d9934180}
+body.ambient-mode .amb-date{color:#d7c7a6;font-size:11px!important;letter-spacing:.12em}
+body.ambient-mode .amb-greeting{font-size:10px!important;line-height:1.6;color:#d5b56e!important;border-top:1px solid #73613f77;margin-top:9px;padding-top:7px}
+body.ambient-mode #weatherPanelContent{overflow:auto}
+body.ambient-mode #weatherPanelContent strong{font-family:'Barlow Condensed',Impact,sans-serif;font-weight:700}
+body.ambient-mode #weatherPanelContent .amb-row{margin-top:9px}
+body.ambient-mode .amb-muted{font-size:10px!important;color:#b9b4a0!important;line-height:1.5}
+body.ambient-mode .amb-row{min-height:0!important;padding:8px 0!important;border-bottom:1px solid #60533966;font-size:11px!important}
+body.ambient-mode .amb-row small{font-size:9px!important;color:#b4ac90!important;margin-top:2px}
+body.ambient-mode .amb-dot{background:#dab174;border:1px solid #e9bf81;box-shadow:0 0 8px #d69a4b4d}
+#atelierStatusPanel .amb-content{display:flex;flex-direction:column;justify-content:center;padding-top:7px!important;padding-bottom:7px!important}
+.at-status-line{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #66604866;padding:6px 0;font-size:10px}
+.at-status-line:last-of-type{border-bottom:0}
+.at-status-line span{color:#c4bca4;letter-spacing:.07em}
+.at-status-line strong{font-size:10px;color:#bcd79d;font-weight:600;text-align:right}
+.at-status-line strong.offline{color:#e4b48d}
+#atelierHousePanel .amb-content{padding:9px 12px!important;overflow:auto}
+.at-house-row{
+ display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;gap:9px;
+ min-height:42px;border-bottom:1px solid #62553b77;padding:6px 0
+}
+.at-house-row:last-child{border-bottom:0}
+.at-house-emoji{font-size:18px;color:#e1b570;line-height:1}
+.at-house-info{min-width:0}
+.at-house-info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px;color:#ddd3b6}
+.at-house-info small{display:block;font-size:9px;color:#b1ad93}
+.at-switch{
+ width:48px;height:25px;border-radius:25px;background:#161e17;border:1px solid #878778;
+ box-shadow:inset 0 1px 4px #000;position:relative;cursor:pointer;flex:none
+}
+.at-switch:after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;background:#a3a6a0;border-radius:50%;transition:transform .16s,background .16s}
+.at-switch[aria-checked="true"]{border-color:#d7a65b;background:#593c20;box-shadow:inset 0 0 9px #ffb25243,0 0 7px #d6983d31}
+.at-switch[aria-checked="true"]:after{transform:translateX(22px);background:#ffd38a}
+.at-switch:disabled{opacity:.45;cursor:wait}
+.at-house-empty{display:flex;flex-direction:column;justify-content:center;height:100%;gap:8px;font-size:11px;line-height:1.5;color:#c7b8a0}
+.at-house-empty p{margin:0}
+.at-house-empty button{min-height:35px}
+.at-house-message{font-size:9px;color:#b2c995}
+body.ambient-mode #ambientReminders{font-size:10px}
+body.ambient-mode .amb-tools{
+ flex:1;min-height:0;display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr));
+ gap:6px!important;padding:8px!important;overflow:visible
+}
+body.ambient-mode .amb-tools .amb-tool{
+ min-height:0!important;height:100%;min-width:0;padding:5px 3px!important;
+ border:1px solid #6e5838!important;border-radius:1px!important;
+ background:linear-gradient(#1c291f,#0a1310)!important;
+ display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;
+ font-size:9px!important;letter-spacing:.09em;color:#dfc59e!important;
+ box-shadow:inset 0 1px #a3894b2a!important
+}
+body.ambient-mode .amb-tools .amb-tool:hover{background:#3a2b1a!important;border-color:#e6ad59!important;transform:translateY(-1px)}
+body.ambient-mode .amb-tool strong{color:#edb667!important;font-size:17px!important;line-height:1!important;font-weight:500}
+body.ambient-mode .amb-tools .amb-tool:disabled{opacity:.5}
+
+/* Character occupies the room naturally, without legacy nameplate or double face */
+body.ambient-mode .amb-center{
+ grid-column:2;grid-row:2;
+ display:grid!important;grid-template-rows:minmax(0,1fr) minmax(170px,.52fr)!important;
+ position:relative;min-height:0!important;min-width:0;overflow:hidden!important;
+ gap:0!important;padding:0!important;margin:0!important;
+ border:1px solid #9b7340!important;border-radius:2px;
+ background:
+ linear-gradient(90deg,#060c077d,#09100913 34%,#08110b8b),
+ url('/mek-ai/ASSETS/Sunlit%20Overgrown%20Industrial%20Workshop.png') center 56%/cover!important;
+ box-shadow:inset 0 0 0 4px #101710,inset 0 0 0 5px #b78c3b5e,0 7px 30px #0009!important
+}
+body.ambient-mode .amb-center:before{
+ content:"";position:absolute;inset:8px!important;border:1px solid #d2a05c30!important;
+ clip-path:none!important;box-shadow:none!important;pointer-events:none;z-index:3
+}
+body.ambient-mode .amb-center:after{
+ content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+ background:linear-gradient(0deg,#07100bd4 0%,transparent 24%),radial-gradient(ellipse at 50% 40%,transparent 42%,#07110b63 100%)
+}
+body.ambient-mode .amb-center .hero{
+ grid-row:1;position:relative;min-height:0!important;max-height:none!important;height:auto!important;
+ width:100%!important;overflow:hidden!important;
+ display:block!important;flex:none!important;margin:0!important;
+ padding:0!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;background:transparent!important;z-index:2
+}
+body.ambient-mode .amb-center .hero:before,body.ambient-mode .amb-center .hero:after{display:none!important}
+body.ambient-mode .amb-center .hero .mek-arc,
+body.ambient-mode .amb-center .hero .mek-serial,
+body.ambient-mode .amb-center .hero .mek-unit-id,
+body.ambient-mode .amb-center .hero .mek-face-meta,
+body.ambient-mode .amb-center .amb-nameplate,
+body.ambient-mode .amb-center .hero .ambient-clock,
+body.ambient-mode .amb-center .hero .ambient-controls,
+body.ambient-mode .amb-center .hero .normal-face-actions,
+body.ambient-mode .amb-center .hero #eyeSub{display:none!important}
+body.ambient-mode .amb-center .hero #eyeState{
+ position:absolute!important;left:12px;bottom:10px;z-index:5;
+ margin:0!important;padding:6px 10px;background:#09130bbd;
+ border:1px solid #77603c7a;color:#f6c17a!important;
+ font-size:11px!important;font-family:'IBM Plex Mono',monospace!important;
+ font-weight:600;letter-spacing:.15em!important;max-width:calc(100% - 24px);
+ text-shadow:0 2px 8px #000
+}
+body.ambient-mode .amb-center .eyewrap{
+ position:absolute!important;inset:0!important;
+ width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;
+ margin:0!important;padding:0!important;aspect-ratio:auto!important;
+ filter:none!important;overflow:hidden!important
+}
+body.ambient-mode .amb-center .eyewrap>svg{display:none!important}
+.at-avatar{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
+.at-avatar>img{
+ display:block;position:absolute;left:50%;bottom:-66px;transform:translateX(-50%);
+ height:calc(100% + 12px);width:auto;max-width:none!important;
+ object-fit:contain;filter:drop-shadow(0 14px 19px #000b);
+ opacity:1;animation:atBreathe 6.8s ease-in-out infinite;transform-origin:50% 78%
+}
+@keyframes atBreathe{
+ 0%,100%{transform:translateX(-50%) translateY(0) rotate(-.45deg)}
+ 50%{transform:translateX(-50%) translateY(-5px) rotate(.35deg)}
+}
+.at-avatar-pose{
+ display:none;position:absolute;left:50%;bottom:-28px;transform:translateX(-50%);
+ height:calc(100% + 25px);aspect-ratio:384/512;
+ background-image:url('/mek-ai/ASSETS/Robot%20Hoodie%20Expression%20Sticker%20Sheet.png');
+ background-size:400% 200%;background-repeat:no-repeat;
+ background-position:var(--pose-x,0%) var(--pose-y,0%);
+ mask-image:radial-gradient(ellipse 61% 65% at 50% 49%,black 56%,transparent 99%);
+ filter:drop-shadow(0 10px 20px #000);
+ opacity:0;transition:opacity .25s ease;
+}
+.at-avatar[data-mood="thinking"] .at-avatar-pose,
+.at-avatar[data-mood="confused"] .at-avatar-pose,
+.at-avatar[data-mood="happy"] .at-avatar-pose,
+.at-avatar[data-mood="speaking"] .at-avatar-pose,
+.at-avatar[data-mood="sleep"] .at-avatar-pose,
+.at-avatar[data-mood="listening"] .at-avatar-pose{display:block;opacity:1}
+.at-avatar[data-mood="thinking"]>img,
+.at-avatar[data-mood="confused"]>img,
+.at-avatar[data-mood="happy"]>img,
+.at-avatar[data-mood="speaking"]>img,
+.at-avatar[data-mood="sleep"]>img,
+.at-avatar[data-mood="listening"]>img{opacity:0}
+.at-avatar[data-mood="thinking"] .at-avatar-pose{--pose-x:66.6667%;--pose-y:0}
+.at-avatar[data-mood="confused"] .at-avatar-pose{--pose-x:33.3333%;--pose-y:0}
+.at-avatar[data-mood="happy"] .at-avatar-pose{--pose-x:100%;--pose-y:0}
+.at-avatar[data-mood="speaking"] .at-avatar-pose{--pose-x:66.6667%;--pose-y:100%;animation:atSpeak .58s ease-in-out infinite alternate}
+.at-avatar[data-mood="sleep"] .at-avatar-pose{--pose-x:33.3333%;--pose-y:100%;filter:brightness(.68)}
+.at-avatar[data-mood="listening"] .at-avatar-pose{--pose-x:0%;--pose-y:100%;animation:atListen 2.8s ease-in-out infinite}
+@keyframes atSpeak{to{transform:translateX(-50%) translateY(-4px) rotate(.8deg)}}
+@keyframes atListen{50%{transform:translateX(-50%) translateY(-3px) rotate(-1deg)}}
+.at-scene-kicker{position:absolute;top:12px;left:15px;z-index:6;font-size:10px;letter-spacing:.16em;color:#f1bb78;text-shadow:0 2px 7px #000}
+.at-scene-id{position:absolute;top:12px;right:14px;z-index:6;font-size:9px;letter-spacing:.14em;color:#c8b99b;text-shadow:0 2px 7px #000}
+.at-pin-note{
+ position:absolute;top:46px;right:15px;z-index:7;max-width:116px;
+ padding:12px 10px 9px;transform:rotate(3deg);
+ background:#d0ad75e8;color:#312a1c;box-shadow:2px 5px 9px #0009;
+ font-size:10px;line-height:1.4;font-weight:700;text-align:left
+}
+.at-pin-note:before{content:"";position:absolute;top:-5px;left:46%;width:23px;height:10px;transform:rotate(-7deg);background:#806947bb}
+.at-scene-seal{position:absolute;bottom:14px;right:15px;z-index:6;font-size:9px;color:#dfb877;letter-spacing:.14em}
+
+/* Functional transcript and listening bar in center, no duplication */
+#atelierComms{
+ grid-row:2;z-index:5;position:relative;min-height:0;min-width:0;
+ display:grid;grid-template-rows:32px minmax(0,1fr) 54px;
+ border-top:2px solid #b58748;border-radius:0;
+ background:#0a120fed;box-shadow:0 -8px 28px #000b,inset 0 0 0 3px #17221a
+}
+.at-comms-head{
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+ padding:7px 12px;font-size:10px;font-weight:600;letter-spacing:.15em;color:#f3bb73;
+ background:#16211a;white-space:nowrap
+}
+.at-comms-head span{font-size:9px;color:#b3c7a1;letter-spacing:.07em}
+#atTranscript{min-height:0;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:5px;scrollbar-width:thin}
+.at-msg{display:grid;grid-template-columns:70px minmax(0,1fr);gap:8px;font-size:10px;line-height:1.45;color:#d9d0b8}
+.at-msg b{font-size:9px;letter-spacing:.05em;color:#e7ab61}
+.at-msg.operator b{color:#b6cd96}
+.at-msg span{overflow-wrap:anywhere;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.at-voice-row{display:flex;align-items:center;gap:9px;padding:6px 11px;border-top:1px solid #73572e;background:linear-gradient(#0c1711,#101a14)}
+.at-voice-pill{
+ border:1px solid #826239;display:flex;align-items:center;gap:6px;
+ padding:7px 9px;font-size:9px;color:#d4c299;white-space:nowrap;min-width:114px
+}
+.at-voice-led{width:7px;height:7px;flex:none;border-radius:50%;background:#6e8460;box-shadow:0 0 7px #4c804666}
+.at-voice-led.active{background:#ffd18a;box-shadow:0 0 10px #eaa64d}
+.at-wave{display:flex;align-items:center;justify-content:center;gap:3px;min-width:15px;flex:1;height:35px;overflow:hidden}
+.at-wave i{width:3px;height:16px;flex:0 0 3px;border-radius:2px;background:#b77d32;opacity:.7;transform:scaleY(.24)}
+.at-wave.active i{animation:atWave calc(.42s + var(--n)*33ms) ease-in-out infinite alternate}
+@keyframes atWave{to{transform:scaleY(calc(.3 + var(--n)*.045));background:#ffc46e}}
+.at-talk{
+ border:1px solid #e6ad60!important;border-radius:50%;flex:none;width:42px;height:42px;
+ color:#ffe1a1;background:radial-gradient(circle,#a06128,#24190e 70%)!important;
+ box-shadow:0 0 12px #d0903c55!important;cursor:pointer;font-size:19px;line-height:1
+}
+.at-talk:hover,.at-talk:focus-visible{box-shadow:0 0 22px #e9b161a0!important}
+.at-talk[aria-pressed="true"]{background:radial-gradient(circle,#b76831,#493019 70%)!important}
+
+/* Lower engraved status strip */
+body.ambient-mode .amb-bottom{
+ grid-column:1/-1;grid-row:3;min-height:0!important;
+ display:grid!important;grid-template-columns:1.25fr .75fr 1.15fr 68px!important;
+ gap:10px!important;max-height:none!important;overflow:visible
+}
+body.ambient-mode .amb-status{
+ border:1px solid #7c6038!important;border-radius:2px;min-width:0;min-height:0!important;
+ padding:10px 13px!important;
+ background:linear-gradient(140deg,#132017f2,#09120ef7)!important;
+ box-shadow:inset 0 0 0 3px #0b120f,inset 0 0 0 4px #ad864230!important;
+ justify-content:center!important
+}
+body.ambient-mode .amb-status b{font-size:10px!important;letter-spacing:.17em!important;color:#f1bc75}
+body.ambient-mode .amb-status span{font-size:10px!important;color:#bbbba0;overflow:hidden;text-overflow:ellipsis}
+body.ambient-mode .amb-status.amb-quote{text-align:center;align-items:center}
+body.ambient-mode .amb-quote span{color:#d7c7a8!important;font-style:italic}
+body.ambient-mode .amb-quote small{color:#bfa17b!important}
+body.ambient-mode .amb-raccoon{
+ min-width:0;min-height:0!important;
+ border:1px solid #7f633b!important;
+ background:#101712!important;
+ position:relative;overflow:hidden;
+}
+body.ambient-mode .amb-raccoon svg{display:none}
+body.ambient-mode .amb-raccoon:after{
+ content:"";position:absolute;inset:3px;
+ background:url('/mek-ai/ASSETS/Kawaii%20Raccoon%20Expression%20Sticker%20Sheet.png') left center/400% 100% no-repeat
+}
+
+/* Existing dialogs, inputs and non-ambient views keep functioning */
+#ambientModal .amb-dialog{background:#101a14!important;border:1px solid #ae8546!important}
+#ambientModal .amb-dialog-head{background:#1f2a20!important;color:#f0bc79!important}
+body:not(.ambient-mode) .primary,body:not(.ambient-mode) .send{
+ background:linear-gradient(#945f2d,#62401e)!important;color:#ffebbd!important;
+ border:1px solid #e0a961!important
+}
+body:not(.ambient-mode) .eyewrap{position:relative}
+body:not(.ambient-mode) .eyewrap svg{display:none}
+body:not(.ambient-mode) .at-avatar{inset:0}
+body:not(.ambient-mode) .at-avatar>img{height:100%;bottom:0}
+body:not(.ambient-mode) .at-avatar-pose{height:100%;bottom:0}
+body:not(.ambient-mode) .hero{overflow:hidden!important}
+body:not(.ambient-mode) .hero .eyewrap{height:260px!important}
+body:not(.ambient-mode) .hero h2,body:not(.ambient-mode) .hero p{position:relative;z-index:2}
+body:not(.ambient-mode) .hero .normal-face-actions{position:relative;z-index:4}
+
+/* Small laptop: controlled card scroll only when space really is limited */
+@media(max-height:760px) and (min-width:981px){
+ body.ambient-mode #ambientDashboard{grid-template-rows:72px minmax(0,1fr) 61px!important;gap:8px!important;padding:10px!important}
+ body.ambient-mode .amb-left{grid-template-rows:minmax(117px,.9fr) minmax(142px,1.08fr) minmax(130px,.86fr)}
+ body.ambient-mode .amb-right{grid-template-rows:minmax(120px,.76fr) minmax(100px,.66fr) minmax(175px,1.2fr)}
+ body.ambient-mode .amb-tools{gap:4px!important;padding:6px!important}
+ body.ambient-mode .amb-tools .amb-tool{font-size:8px!important}
+ body.ambient-mode .amb-head{min-height:31px!important;padding:5px 10px!important}
+ body.ambient-mode .amb-content{padding:8px 11px!important}
+ body.ambient-mode #ambientDashboard .at-pin-note{top:40px}
+}
+@media(max-width:1150px) and (min-width:901px){
+ body.ambient-mode #ambientDashboard{grid-template-columns:minmax(190px,.98fr) minmax(320px,1.46fr) minmax(205px,.98fr)!important;gap:8px!important;padding:10px!important}
+ .atelier-tabs button{min-width:65px;padding:7px 8px;font-size:9px}
+ body.ambient-mode .amb-top{grid-template-columns:minmax(135px,1fr) auto minmax(108px,1fr);gap:7px!important;padding:8px 12px!important}
+ .atelier-connection{font-size:8px}
+ .at-pin-note{max-width:95px;font-size:9px}
+}
+@media(max-width:900px){
+ body.ambient-mode #ambientDashboard{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:auto auto auto auto!important;
+  height:100dvh!important;max-height:100dvh!important;overflow-y:auto!important;
+  padding:10px!important;gap:10px!important
+ }
+ body.ambient-mode .amb-top{grid-column:1/-1;grid-row:1;grid-template-columns:1fr auto!important;row-gap:8px!important}
+ .atelier-tabs{grid-row:2;grid-column:1/-1;flex-wrap:wrap}
+ .at-live{display:none}
+ body.ambient-mode .amb-center{grid-row:2;grid-column:1/-1;min-height:530px!important;grid-template-rows:340px 190px!important}
+ body.ambient-mode .amb-left{grid-row:3;grid-column:1;grid-template-rows:auto auto auto;overflow:visible!important}
+ body.ambient-mode .amb-right{grid-row:3;grid-column:2;grid-template-rows:auto auto auto;overflow:visible!important}
+ body.ambient-mode .amb-panel{min-height:155px!important}
+ body.ambient-mode #atelierStatusPanel{min-height:175px!important}
+ body.ambient-mode #atelierHousePanel{min-height:185px!important}
+ body.ambient-mode .amb-tools{grid-auto-rows:minmax(62px,1fr)}
+ body.ambient-mode .amb-bottom{grid-row:4;grid-column:1/-1;min-height:68px!important}
+ body.ambient-mode .amb-column{height:auto!important}
+}
+@media(max-width:600px){
+ body.ambient-mode #ambientDashboard{display:flex!important;flex-direction:column!important;padding:8px!important;gap:9px!important}
+ body.ambient-mode .amb-top{display:flex!important;flex-direction:column;align-items:stretch!important;min-height:0!important;padding:13px!important}
+ body.ambient-mode .amb-top>div:first-child{text-align:center}
+ .at-connection{text-align:center}
+ .atelier-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+ .atelier-tabs button{min-width:0;padding:9px 2px;font-size:8px;letter-spacing:0}
+ body.ambient-mode .amb-center{order:1;flex:none;display:grid!important;grid-template-rows:300px 195px!important;min-height:495px!important;width:100%!important}
+ body.ambient-mode .amb-left{order:2;display:grid!important;grid-template-rows:auto!important;flex:none;width:100%!important}
+ body.ambient-mode .amb-right{order:3;display:grid!important;grid-template-rows:auto!important;flex:none;width:100%!important}
+ body.ambient-mode .amb-panel{min-height:145px!important}
+ body.ambient-mode .amb-left .amb-panel:nth-child(2){min-height:190px!important}
+ body.ambient-mode #atelierHousePanel{min-height:160px!important}
+ body.ambient-mode .amb-right .amb-panel:last-child{min-height:265px!important}
+ body.ambient-mode .amb-tools{min-height:215px!important}
+ body.ambient-mode .amb-bottom{order:4;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:auto auto!important;min-height:155px!important}
+ body.ambient-mode .amb-raccoon{display:none!important}
+ body.ambient-mode .amb-status.amb-quote{grid-column:1/-1}
+ body.ambient-mode .amb-clock{font-size:56px!important}
+ body.ambient-mode .amb-center .hero #eyeState{font-size:10px!important}
+ .at-pin-note{font-size:9px;max-width:90px}
+}
+@media(prefers-reduced-motion:reduce){
+ .at-avatar>img,.at-avatar-pose,.at-wave i{animation:none!important;transition:none!important}
+}
