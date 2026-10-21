@@ -1,0 +1,7 @@
+# Keep local credentials and pairing tokens off GitHub.
+config.json
+config.json.*
+.mek-setup-*
+__pycache__/
+*.pyc
+.venv/
