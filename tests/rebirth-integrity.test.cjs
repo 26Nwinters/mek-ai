@@ -30,9 +30,9 @@ test('retains authentication, assistant, wake word and original smart-home contr
 });
 test('loads the final illustrated console, without resurrecting the old renderer',()=>{
  assert.match(html,/href="\/mek-ai\/mek-rebirth\.css"/);
- assert.match(html,/href="\/mek-ai\/mek-atelier\.css"/);
+ assert.match(html,/href="\/mek-ai\/mek-atelier\.css\?v=4"/);
  assert.match(html,/src="\/mek-ai\/mek-rebirth\.js"/);
- assert.match(html,/src="\/mek-ai\/mek-atelier\.js"/);
+ assert.match(html,/src="\/mek-ai\/mek-atelier\.js\?v=4"/);
  assert.doesNotMatch(html,/src="\/mek-ai\/mek-hideaway\.js"/);
  assert.doesNotMatch(html,/src="\/mek-ai\/mek-avatar3d\.js"/);
  assert.match(base,/mek-face-state/);
