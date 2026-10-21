@@ -30,9 +30,9 @@ test('retains authentication, assistant, wake word and original smart-home contr
 });
 test('loads the final illustrated console, without resurrecting the old renderer',()=>{
  assert.match(html,/href="\/mek-ai\/mek-rebirth\.css"/);
- assert.match(html,/href="\/mek-ai\/mek-atelier\.css\?v=4"/);
+ assert.match(html,/href="\/mek-ai\/mek-atelier\.css\?v=5"/);
  assert.match(html,/src="\/mek-ai\/mek-rebirth\.js"/);
- assert.match(html,/src="\/mek-ai\/mek-atelier\.js\?v=4"/);
+ assert.match(html,/src="\/mek-ai\/mek-atelier\.js\?v=5"/);
  assert.doesNotMatch(html,/src="\/mek-ai\/mek-hideaway\.js"/);
  assert.doesNotMatch(html,/src="\/mek-ai\/mek-avatar3d\.js"/);
  assert.match(base,/mek-face-state/);
@@ -70,6 +70,22 @@ test('character stays visible when the legacy face wrapper collapses',()=>{
  assert.match(style,/body\.ambient-mode \.amb-center>\.at-stage-avatar/);
  assert.match(style,/body\.ambient-mode \.amb-center>\.hero\{display:none!important\}/);
  assert.match(style,/body\.ambient-mode \.amb-right\{/);
+});
+test('removes redundant status and memory readouts without deleting real memory functionality',()=>{
+ assert.doesNotMatch(html,/class="amb-bottom"/);
+ assert.doesNotMatch(view,/statusPanel\.id\s*=\s*'atelierStatusPanel'/);
+ assert.doesNotMatch(view,/id="atMemoryState"/);
+ // Existing event handlers still write these hidden values while the app is running.
+ assert.match(html,/<div class="ambient-data-cache" hidden aria-hidden="true">/);
+ assert.match(html,/id="ambientMemoryStatus"/);
+ assert.match(html,/id="ambientSysStatus"/);
+ assert.match(html,/id="saveMemory"/);
+ assert.match(html,/id="memoryList"/);
+ assert.match(html,/data-view="memory"/);
+ assert.match(view,/id='atelierHousePanel'/);
+ assert.match(style,/body\.ambient-mode \.amb-bottom\{display:none!important\}/);
+ assert.match(style,/body:not\(\.ambient-mode\) #home \.dashboard>\.readouts\{display:none!important\}/);
+ assert.match(style,/minmax\(450px,2\.02fr\)/);
 });
 test('PWA shell version tracks the final files and avoids caching secrets',()=>{
  for(const asset of ['mek-rebirth.css','mek-rebirth.js','mek-atelier.css','mek-atelier.js','smart-home.js']){
