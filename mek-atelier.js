@@ -92,16 +92,6 @@
 
     // The original hero is inserted here by the existing enterAmbient() function.
     // These decorations belong to the room and are not another nameplate.
-    const statusPanel = make('div', 'amb-panel', left);
-    statusPanel.id = 'atelierStatusPanel';
-    statusPanel.innerHTML = '<div class="amb-head">SYSTEM STATUS <span>LIVE FEED</span></div>' +
-      '<div class="amb-content">' +
-      '<div class="at-status-line"><span>CONSOLE</span><strong id="atOnline">ONLINE</strong></div>' +
-      '<div class="at-status-line"><span>VOICE</span><strong id="atVoiceState">STANDBY</strong></div>' +
-      '<div class="at-status-line"><span>SMART HOME</span><strong id="atHouseState" class="offline">OFFLINE</strong></div>' +
-      '<div class="at-status-line"><span>MEMORY BANK</span><strong id="atMemoryState">0 NOTES</strong></div>' +
-      '</div>';
-
     const housePanel = document.createElement('div');housePanel.className='amb-panel';
     housePanel.id='atelierHousePanel';
     housePanel.innerHTML='<div class="amb-head">HOUSE CONTROLS <span id="atHomeCaption">LOCAL CONTROLLER</span></div><div class="amb-content" id="atHouseDevices"></div>';
@@ -190,7 +180,6 @@
       const speaking=getMood()==='speaking', thinking=getMood()==='thinking';
       const label=speaking?'MEK IS SPEAKING':thinking?'PROCESSING':isActive?'VOICE LISTENING':status.includes('OFF')?'VOICE OFF':'VOICE STANDBY';
       const at=$('#atVoiceLabel');if(at)at.textContent=label;
-      const st=$('#atVoiceState');if(st)st.textContent=label.replace('VOICE ','');
       const active=isActive||speaking;
       $('#atVoiceLED')?.classList.toggle('active',active);
       $('#atWave')?.classList.toggle('active',active);
@@ -200,12 +189,6 @@
     if(voiceStatus)new MutationObserver(updateVoice).observe(voiceStatus,{childList:true,subtree:true,characterData:true});
     window.addEventListener('mek-face-state',updateVoice);
     updateVoice();
-
-    const memory=$('#memoryCount');
-    const updateMemory=()=>{
-      const el=$('#atMemoryState');if(el)el.textContent=memory?.textContent?.trim()||'0 NOTES';
-    };
-    if(memory)new MutationObserver(updateMemory).observe(memory,{childList:true,subtree:true,characterData:true});updateMemory();
 
     // Snapshot of the *actual* Tapo devices. A switch triggers the original
     // authenticated local-controller button, preserving its error handling.
@@ -222,8 +205,6 @@
       const signature=JSON.stringify({connected,items:snapshot.map(({name,state})=>({name,state}))});
       if(signature===lastHomeSignature)return;lastHomeSignature=signature;
       $('#atHomeCaption').textContent=connected?'CONTROLLER ONLINE':'CONTROLLER OFFLINE';
-      const houseState=$('#atHouseState');
-      if(houseState){houseState.textContent=connected?'CONNECTED':'OFFLINE';houseState.classList.toggle('offline',!connected)}
       if(!dest)return;
       dest.replaceChildren();
       if(!connected||!snapshot.length){
@@ -276,7 +257,6 @@
 
     // Consistent icon and theme labels without a second inert interface.
     const brand=head.querySelector('.amb-brand');if(brand)brand.textContent='MEK-AI';
-    const quote=$('#ambientQuote');if(quote)quote.textContent='"You handle the chaos. I’ll handle the electricity."';
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
   else init();
