@@ -195,8 +195,17 @@ const get=(k,d)=>{try{return JSON.parse(localStorage.getItem('mekai:'+k))??d}cat
 let settings={...defaults,...get('settings',{})},memories=get('memories',[]),messages=get('messages',[]),timers=get('timers',[]),reminders=get('reminders',[]),voiceReplies=false,recognition=null,ambientVoiceSession=false,handsFreeVoice=false,voiceCaptureStarting=false,voiceAwaitingReply=false;
 let faceTimer=null,sleeping=false;
 function setFace(state,label,sub){const eye=$('#eye');eye.classList.remove('state-idle','state-listening','state-thinking','state-speaking','state-happy','state-confused','state-sleep');eye.classList.add('state-'+state);$('#eyeState').textContent=label;$('#eyeSub').textContent=sub||('PIXEL PERSONA // '+state.toUpperCase());}
-function say(role,text,save=true){const m={role,text,at:Date.now()};if(save){messages.push(m);messages=messages.slice(-100);put('messages',messages)}render(m);if(role==='assistant'&&voiceReplies&&'speechSynthesis'in window){window.speechSynthesis.cancel();const spokenText=String(text).replace(/```[\\s\\S]*?```/g,'').replace(/\\*\\*(.*?)\\*\\*/g,'$1').replace(/\\*(.*?)\\*/g,'$1').replace(/^\\s*[-*]\\s+/gm,'').replace(/^#+\\s*/gm,'').replace(/\\s+/g,' ').trim();const utterance=new SpeechSynthesisUtterance(spokenText);utterance.rate=Number(settings.voiceRate)||1;utterance.pitch=Number(settings.voicePitch)||1;const voices=getAvailableVoices();const selectedVoice=voices.find(v=>v.name===settings.voiceName)||voices.find(v=>/en-gb-x-rjs-local/i.test((v.name||'')+' '+(v.voiceURI||'')))||voices.find(v=>(v.lang||'').toLowerCase()==='en-gb');if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||'en-GB'}else{utterance.lang='en-GB'}utterance.onstart=()=>setFace('speaking','SPEAKING','VOICE OUTPUT // ACTIVE');utterance.onend=()=>{if(!sleeping)setFace('idle','SYSTEM STANDBY','PERSONA ENGINE // MK-II');if(handsFreeVoice&&!sleeping){voiceAwaitingReply=false;setTimeout(()=>startHandsFreeCapture(),450)}};window.speechSynthesis.speak(utterance)}if(role==='assistant'&&!sleeping){setFace('speaking','SPEAKING','OUTPUT // TEXT RESPONSE');clearTimeout(faceTimer);faceTimer=setTimeout(()=>setFace('idle','SYSTEM STANDBY','PERSONA ENGINE // MK-II'),Math.max(1400,Math.min(3200,text.length*22)));if(/sorry|confus|not sure|unclear/i.test(text))setFace('confused','UNCERTAIN','REQUEST ANALYSIS');else if(/hello|great|happy|glad|nice/i.test(text))setFace('happy','POSITIVE RESPONSE','OPERATOR INTERACTION');}}
+function say(role,text,save=true){const m={role,text,at:Date.now()};if(save){messages.push(m);messages=messages.slice(-100);put('messages',messages)}render(m);if(role==='assistant'&&voiceReplies&&'speechSynthesis'in window){window.speechSynthesis.cancel();const spokenText=String(text).replace(/```[\\s\\S]*?```/g,'').replace(/\\*\\*(.*?)\\*\\*/g,'$1').replace(/\\*(.*?)\\*/g,'$1').replace(/^\\s*[-*]\\s+/gm,'').replace(/^#+\\s*/gm,'').replace(/\\s+/g,' ').trim();const utterance=new SpeechSynthesisUtterance(spokenText);utterance.rate=Number(settings.voiceRate)||1;utterance.pitch=Number(settings.voicePitch)||1;const voices=getAvailableVoices();const selectedVoice=voices.find(v=>v.name===settings.voiceName)||voices.find(v=>/en-gb-x-rjs-local/i.test((v.name||'')+' '+(v.voiceURI||'')))||voices.find(v=>(v.lang||'').toLowerCase()==='en-gb');if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||'en-GB'}else{utterance.lang='en-GB'}utterance.onstart=()=>setFace('speaking','SPEAKING','VOICE OUTPUT // ACTIVE');utterance.onend=()=>{if(!sleeping)setFace('idle','SYSTEM STANDBY','PERSONA ENGINE // MK-II');if(handsFreeVoice&&!sleeping){voiceAwaitingReply=false;scheduleHandsFreeRestart(650)}};utterance.onerror=utterance.onend;window.speechSynthesis.speak(utterance)}if(role==='assistant'&&!sleeping){setFace('speaking','SPEAKING','OUTPUT // TEXT RESPONSE');clearTimeout(faceTimer);faceTimer=setTimeout(()=>setFace('idle','SYSTEM STANDBY','PERSONA ENGINE // MK-II'),Math.max(1400,Math.min(3200,text.length*22)));if(/sorry|confus|not sure|unclear/i.test(text))setFace('confused','UNCERTAIN','REQUEST ANALYSIS');else if(/hello|great|happy|glad|nice/i.test(text))setFace('happy','POSITIVE RESPONSE','OPERATOR INTERACTION');}}
+let voiceRestartTimer=null,voiceRestartDelay=350;
+function scheduleHandsFreeRestart(delay=650){
+ clearTimeout(voiceRestartTimer);
+ voiceRestartTimer=setTimeout(()=>{
+  voiceRestartTimer=null;
+  if(handsFreeVoice&&!sleeping&&!voiceAwaitingReply&&!voiceCaptureStarting&&!recognition)startHandsFreeCapture();
+ },delay);
+}
 function stopHandsFreeVoice(status='MICROPHONE STANDBY'){
+ clearTimeout(voiceRestartTimer);voiceRestartTimer=null;
  handsFreeVoice=false;voiceCaptureStarting=false;voiceAwaitingReply=false;wakeWordDetected=false;wakeTranscript='';clearWakeSilenceTimer();
  if(recognition){const active=recognition;recognition=null;try{active.onend=null;active.stop()}catch{}}
  $('#voiceInput').textContent='TALK TO MEK';$('#voiceInput').setAttribute('aria-pressed','false');$('#mainTalk').textContent='TALK TO MEK';$('#mainTalk').setAttribute('aria-pressed','false');$('#ambientTalk').textContent='TALK TO MEK';$('#voiceStatus').textContent=status;
@@ -211,19 +220,24 @@ function finishWakeRequest(){
  wakeWordDetected=false;wakeTranscript='';lastVoiceActivity=0;
  if(!request){$('#voiceStatus').textContent='I heard MECHA, but no request. Say MECHA followed by your request.';setFace('listening','WAKE WORD READY','SAY “MECHA” TO BEGIN');return}
  voiceAwaitingReply=true;
+ // Stop the previous recognition session before network response or speech synthesis.
+ // Prevents two active microphones and the assistant hearing its own voice.
+ if(recognition){try{recognition.stop()}catch{}}
  $('#voiceStatus').textContent='REQUEST CAPTURED. PROCESSING...';
  $('#message').value=request;
  $('#chatForm').requestSubmit();
 }
 function startHandsFreeCapture(){
- if(!handsFreeVoice||voiceCaptureStarting||sleeping||voiceAwaitingReply)return;
+ if(!handsFreeVoice||voiceCaptureStarting||sleeping||voiceAwaitingReply||recognition)return;
+ clearTimeout(voiceRestartTimer);voiceRestartTimer=null;
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!SR){stopHandsFreeVoice('VOICE INPUT NOT SUPPORTED HERE');setFace('confused','VOICE UNSUPPORTED','TRY CHROME MICROPHONE SETTINGS');return}
  voiceCaptureStarting=true;
  const rec=new SR();recognition=rec;rec.lang='en-US';rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=5;
- rec.onstart=()=>{voiceCaptureStarting=false;if(!handsFreeVoice){try{rec.stop()}catch{}return}setFace('listening',wakeWordDetected?'LISTENING TO REQUEST':'WAKE WORD LISTENING','MICROPHONE ACTIVE // '+(wakeWordDetected?'CAPTURING':'SAY “MECHA”'));$('#voiceStatus').textContent=wakeWordDetected?'MIC ACTIVE. SAY YOUR REQUEST...':'MIC ACTIVE. SAY “MECHA” TO START.';};
+ rec.onstart=()=>{voiceCaptureStarting=false;if(!handsFreeVoice||recognition!==rec){try{rec.stop()}catch{}return}setFace('listening',wakeWordDetected?'LISTENING TO REQUEST':'WAKE WORD LISTENING','MICROPHONE ACTIVE // '+(wakeWordDetected?'CAPTURING':'SAY “MECHA”'));$('#voiceStatus').textContent=wakeWordDetected?'MIC ACTIVE. SAY YOUR REQUEST...':'MIC ACTIVE. SAY “MECHA” TO START.';};
  rec.onresult=e=>{
-  if(!handsFreeVoice||voiceAwaitingReply)return;
+  if(!handsFreeVoice||voiceAwaitingReply||recognition!==rec)return;
+  voiceRestartDelay=350;
   let finalText='',interimText='';
   for(let i=e.resultIndex;i<e.results.length;i++){
    const result=e.results[i];
@@ -262,15 +276,17 @@ function startHandsFreeCapture(){
  };
  rec.onerror=e=>{
   voiceCaptureStarting=false;if(!handsFreeVoice)return;
+  voiceRestartDelay=e.error==='no-speech'?1200:2500;
   const msg=e.error==='not-allowed'||e.error==='service-not-allowed'?'MIC PERMISSION DENIED. CHECK CHROME SITE SETTINGS.':e.error==='no-speech'?'MIC ACTIVE, NO SPEECH DETECTED. SAY “MECHA”.':'VOICE ERROR: '+e.error;
   $('#voiceStatus').textContent=msg;setFace('confused','VOICE INPUT ISSUE',msg);
-  if(e.error==='not-allowed'||e.error==='service-not-allowed')stopHandsFreeVoice(msg);
+  if(['not-allowed','service-not-allowed','audio-capture','network'].includes(e.error))stopHandsFreeVoice(msg);
  };
  rec.onend=()=>{
-  if(recognition===rec)recognition=null;voiceCaptureStarting=false;
-  if(handsFreeVoice&&!sleeping&&!voiceAwaitingReply)setTimeout(()=>startHandsFreeCapture(),350);
+  if(recognition!==rec)return;
+  recognition=null;voiceCaptureStarting=false;
+  if(handsFreeVoice&&!sleeping&&!voiceAwaitingReply)scheduleHandsFreeRestart(voiceRestartDelay);
  };
- try{rec.start()}catch(e){voiceCaptureStarting=false;$('#voiceStatus').textContent='COULD NOT START MICROPHONE. CHECK CHROME PERMISSIONS.';setFace('confused','MICROPHONE DID NOT START','CHECK SITE PERMISSIONS');if(handsFreeVoice)setTimeout(()=>{if(handsFreeVoice&&!recognition)startHandsFreeCapture()},700)}
+ try{rec.start()}catch(e){if(recognition===rec)recognition=null;voiceCaptureStarting=false;$('#voiceStatus').textContent='COULD NOT START MICROPHONE. CHECK CHROME PERMISSIONS.';setFace('confused','MICROPHONE DID NOT START','CHECK SITE PERMISSIONS');if(handsFreeVoice)scheduleHandsFreeRestart(2500)}
 }
 function matchMechaWakeWord(text){
  const variants=/\b(?:mecha|mecca|mekka|meka|mech|meesha|misha|meshah|mechuh|meca|meta|meka)\b/i;
@@ -279,9 +295,9 @@ function matchMechaWakeWord(text){
 }
 function resumeHandsFreeAfterReply(){
  if(!handsFreeVoice||sleeping)return;
- voiceAwaitingReply=false;
  if(voiceReplies&&'speechSynthesis'in window){$('#voiceStatus').textContent='REPLYING...';return}
- setTimeout(()=>{if(handsFreeVoice&&!sleeping&&!voiceCaptureStarting&&!recognition)startHandsFreeCapture()},700);
+ voiceAwaitingReply=false;
+ scheduleHandsFreeRestart(700);
 }
 function render(m){const el=document.createElement('div');el.className='msg '+(m.role==='user'?'user':'system');const who=document.createElement('div');who.className='who';who.textContent=m.role==='user'?'OPERATOR':'MEK-AI';const body=document.createElement('div');body.textContent=m.text;el.append(who,body);$('#chatlog').append(el);$('#chatlog').scrollTop=$('#chatlog').scrollHeight}
 async function getDirectWeatherAnswer(question){
