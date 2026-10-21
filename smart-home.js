@@ -22,6 +22,7 @@
     status.textContent = online ? 'CONTROLLER ONLINE' : 'CONTROLLER OFFLINE';
     status.classList.toggle('smart-online', online);
     message.textContent = text;
+    window.dispatchEvent(new CustomEvent('mek:home-update', { detail: { connected: online } }));
   }
 
   async function request(path, method = 'GET', candidateToken = token) {
@@ -103,6 +104,7 @@
         label.textContent = 'DEVICE UNAVAILABLE';
       }
     }));
+    window.dispatchEvent(new Event('mek:home-update'));
   }
 
   async function connect() {
@@ -268,7 +270,10 @@
       return result.name + ' is now ' + result.state + '.';
     } catch (error) {
       report(error.message, connected);
-      return 'I could not control ' + device.name + '. ' + error.message;
+      return 'I could not control ' + parsed.device.name + '. ' + error.message;
     }
   };
+  // Reconnect automatically when a token was previously paired in this browser.
+  // The controller remains local and must be running for the connection to succeed.
+  if (token) setTimeout(() => { void connect(); }, 900);
 })();
