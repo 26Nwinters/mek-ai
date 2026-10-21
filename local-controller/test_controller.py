@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Offline checks: no plug, network or Tapo credentials required."""
 import unittest
+import json
+import os
+import tempfile
+from pathlib import Path
 from unittest.mock import patch, Mock
 
 import controller
+import repair
 
 
 class ControllerTests(unittest.TestCase):
@@ -48,6 +53,37 @@ class ControllerTests(unittest.TestCase):
     def test_unknown_failure_never_echoes_raw_output(self):
         diagnostic = controller.kasa_failure_hint("", "unexpected email or token: SECRET")
         self.assertNotIn("SECRET", diagnostic)
+
+    def test_repair_save_preserves_plugs_and_token(self):
+        token = "test-token-that-must-not-change-during-repair"
+        payload = {
+            "email": "test@example.com",
+            "password": "new-password",
+            "token": token,
+            "devices": [{"id": "bedroom-lamp", "name": "Bedroom lamp",
+                         "ip": "192.168.1.50"}],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "config.json"
+            with patch.object(repair, "CONFIG_PATH", path):
+                repair.save_config(payload)
+            saved = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(saved, payload)
+            self.assertEqual(os.stat(path).st_mode & 0o777, 0o600)
+
+    def test_repair_handles_success_and_safe_error(self):
+        config = {"email": "someone@example.com", "password": "redacted"}
+        device = {"id": "bedroom-lamp", "name": "Bedroom lamp",
+                  "ip": "192.168.1.50"}
+        with patch.object(repair, "execute_kasa", return_value="on"):
+            ok, msg = repair.verify_credentials(config, device)
+            self.assertTrue(ok)
+            self.assertIn("on", msg)
+        with patch.object(repair, "execute_kasa",
+                          side_effect=RuntimeError("Authentication failed.")):
+            ok, msg = repair.verify_credentials(config, device)
+            self.assertFalse(ok)
+            self.assertEqual(msg, "Authentication failed.")
 
     def test_failed_commands_do_not_fake_success(self):
         config = {"email": "test@example.com", "password": "not-real"}
