@@ -121,7 +121,7 @@ if(wrap){
   requestAnimationFrame(frameLoop);
   if(!shouldRender())return;
   if(now-last<33 && ready)return;last=now;
-  const motion=!!prefs().motion&&!prefersLess.matches,amount=motion?.09:1;
+  const motion=!!prefs().motion&&!prefersLess.matches,amount=motion ? .09 : 1;
   for(const k of Object.keys(pose))pose[k]=THREE.MathUtils.lerp(pose[k],target[k],amount);
   const t=now*.001;
   const bob=motion?Math.sin(t*.85)*.055:0;
