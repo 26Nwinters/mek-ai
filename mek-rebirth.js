@@ -4,9 +4,9 @@
 const $=q=>document.querySelector(q), eye=$('#eye'), wrap=eye?.closest('.eyewrap');
 if(!eye||!wrap)return;
 document.body.classList.add('mek-rebirth');
-const prefKey='mekai:rebirthPrefs',defaults={avatar:'auto',motion:true,sound:false,humor:72};
-let prefs={...defaults};
-try{prefs={...defaults,...JSON.parse(localStorage.getItem(prefKey)||'{}')}}catch{}
+const prefKey='mekai:rebirthPrefs',defaultPrefs={avatar:'auto',motion:true,sound:false,humor:72};
+let prefs={...defaultPrefs};
+try{prefs={...defaultPrefs,...JSON.parse(localStorage.getItem(prefKey)||'{}')}}catch{}
 window.mekRebirthPrefs=prefs;
 
 /* Upgrade only untouched legacy persona defaults. Custom operator directives stay unchanged. */
