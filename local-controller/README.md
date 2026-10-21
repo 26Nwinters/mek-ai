@@ -48,6 +48,15 @@ Chrome's Local Network Access protection requires permission for a public HTTPS 
 
 ## Troubleshooting
 
+If a plug reports **Tapo authentication failed**, run this login repair command **from the Chromebook**:
+
+```bash
+cd ~/mek-ai/local-controller
+~/tapo-test/bin/python repair.py
+```
+
+Choose the failing plug. The repair script first tests the login already saved on the Chromebook. If it works, restart the controller because its running process may have loaded an older configuration. If it fails, the script prompts for the Tapo account credentials privately and **tests them before saving**. The existing plug names, IPs and pairing token are preserved. Nothing changes if the test fails. After a successful repair, stop the running controller with Ctrl+C and start it again with `~/tapo-test/bin/python controller.py`.
+
 - **Controller offline**: Is `controller.py` still running? Chromebook Linux and the browser must both be running. Sleeping or restarting stops the controller.
 - **Plug unavailable**: Verify the Chromebook and plug are on the same Wi-Fi/network, the IP address is current, and the Tapo account credentials work. Routers can change DHCP addresses; consider reserving the plug's address in your router.
 - **Incorrect token**: Run `~/tapo-test/bin/python setup.py` again from the `local-controller` directory to display the saved token.
