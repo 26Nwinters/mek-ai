@@ -8,6 +8,21 @@ const prefKey='mekai:rebirthPrefs',defaults={avatar:'auto',motion:true,sound:fal
 let prefs={...defaults};
 try{prefs={...defaults,...JSON.parse(localStorage.getItem(prefKey)||'{}')}}catch{}
 window.mekRebirthPrefs=prefs;
+
+/* Upgrade only untouched legacy persona defaults. Custom operator directives stay unchanged. */
+const shippedPersonas=[
+ 'Calm, intelligent, direct, observant, conversational, and slightly dry when it fits. Answer the actual question first. Keep simple answers concise, expand when asked, avoid generic openings and repetitive disclaimers, and never pretend to have abilities or information you do not have.',
+ 'Calm, intelligent, direct, observant, and slightly dry. Be helpful without pretending to have abilities or information you do not have.'
+];
+try{
+ if(typeof settings!=='undefined' && typeof defaults!=='undefined' &&
+    shippedPersonas.includes(settings.personality)){
+  settings.personality=defaults.personality;
+  put('settings',settings);
+  const directive=document.querySelector('#personality');if(directive)directive.value=settings.personality;
+ }
+}catch{}
+
 eye.classList.add('mek-face-svg');
 eye.setAttribute('viewBox','0 0 320 380');
 eye.setAttribute('aria-label','MEK-AI angular mechanical mask: expressive eyes and articulated plates');
