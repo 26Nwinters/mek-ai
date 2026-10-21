@@ -423,3 +423,107 @@ body:not(.ambient-mode) .hero .normal-face-actions{position:relative;z-index:4}
 @media(prefers-reduced-motion:reduce){
  .at-avatar>img,.at-avatar-pose,.at-wave i{animation:none!important;transition:none!important}
 }
+
+
+/* v2.1 — screenshot-driven corrections: keep the main character independent
+   of the former absolute SVG wrapper so it can never collapse out of view. */
+body.ambient-mode .amb-center>.hero{display:none!important}
+body.ambient-mode .amb-center>.at-stage-avatar{
+ display:block!important;position:absolute!important;
+ top:0!important;right:0!important;bottom:170px!important;left:0!important;
+ width:100%!important;height:auto!important;z-index:3!important;
+ overflow:hidden;pointer-events:none;
+}
+body.ambient-mode .amb-center .at-stage-avatar>img{
+ display:block!important;position:absolute!important;left:50%!important;
+ bottom:-27px!important;width:auto!important;
+ height:calc(100% + 12px)!important;max-width:none!important;
+ object-fit:contain;opacity:1;
+ filter:drop-shadow(0 13px 19px #000c);
+ transform-origin:center 74%;
+}
+body.ambient-mode .amb-center .at-stage-avatar .at-avatar-pose{
+ position:absolute!important;bottom:-20px!important;left:50%!important;
+ height:calc(100% + 16px)!important;width:auto!important;
+ aspect-ratio:384/512!important;max-width:none;
+}
+body.ambient-mode .amb-center .at-stage-avatar[data-mood="thinking"]>img,
+body.ambient-mode .amb-center .at-stage-avatar[data-mood="confused"]>img,
+body.ambient-mode .amb-center .at-stage-avatar[data-mood="happy"]>img,
+body.ambient-mode .amb-center .at-stage-avatar[data-mood="speaking"]>img,
+body.ambient-mode .amb-center .at-stage-avatar[data-mood="sleep"]>img,
+body.ambient-mode .amb-center .at-stage-avatar[data-mood="listening"]>img{opacity:0!important}
+body.ambient-mode .amb-center .at-inline-avatar{display:none!important}
+body:not(.ambient-mode) .at-stage-avatar{display:none!important}
+body:not(.ambient-mode) .eyewrap .at-inline-avatar{
+ display:block;position:absolute;inset:0;width:100%;height:100%;z-index:3!important
+}
+body:not(.ambient-mode) .eyewrap .at-inline-avatar>img{
+ height:100%;bottom:0;left:50%;width:auto;max-width:none
+}
+body:not(.ambient-mode) .eyewrap .at-inline-avatar .at-avatar-pose{
+ height:100%;bottom:0;width:auto
+}
+.at-art-unavailable:after{
+ content:"PORTRAIT UNAVAILABLE";position:absolute;inset:35% 10% auto;
+ color:#e5b570;font-size:13px;letter-spacing:.1em;text-align:center;
+ text-shadow:0 2px 8px #000
+}
+body.ambient-mode .at-scene-seal{display:none!important}
+
+/* All three real smart-home switches should fit at typical laptop heights. */
+@media(min-width:901px){
+ body.ambient-mode .amb-right{
+   grid-template-rows:minmax(188px,1.02fr) minmax(112px,.64fr) minmax(214px,1.16fr)!important
+ }
+ body.ambient-mode #atelierHousePanel .amb-content{padding:4px 11px!important;overflow:auto!important}
+ body.ambient-mode #atelierHousePanel .at-house-row{
+   min-height:43px!important;padding:4px 0!important
+ }
+ body.ambient-mode .at-house-info b{font-size:11px!important}
+ body.ambient-mode .at-house-info small{font-size:10px!important}
+ body.ambient-mode .amb-right #ambientReminders{font-size:11px!important}
+ body.ambient-mode .amb-right .amb-row{padding:5px 0!important}
+ body.ambient-mode #weatherPanelContent{overflow:auto!important}
+ body.ambient-mode .amb-left .amb-panel:nth-child(2){min-height:182px!important}
+ body.ambient-mode .amb-head{font-size:11px!important}
+ body.ambient-mode .amb-head span{font-size:10px!important}
+}
+body.ambient-mode .at-scene-kicker{
+ z-index:6;letter-spacing:.12em;font-size:11px
+}
+body.ambient-mode .at-scene-id{z-index:6}
+body.ambient-mode .at-pin-note{
+ z-index:7;top:46px;right:13px;font-size:10px;
+ transform:rotate(2deg)
+}
+body.ambient-mode #atelierComms{z-index:9!important}
+body.ambient-mode .at-voice-row{overflow:hidden}
+body.ambient-mode .at-comms-head{letter-spacing:.1em}
+body.ambient-mode .at-msg{font-size:11px}
+body.ambient-mode .at-msg b{font-size:10px}
+
+/* Responsive portrait stage with stable center-aligned crop */
+@media(max-width:900px){
+ body.ambient-mode .amb-center>.at-stage-avatar{
+   top:0!important;bottom:190px!important
+ }
+ body.ambient-mode .amb-center .at-stage-avatar>img{
+   height:calc(100% + 12px)!important;bottom:-21px!important
+ }
+ body.ambient-mode .amb-center .at-stage-avatar .at-avatar-pose{
+   height:calc(100% + 12px)!important;bottom:-18px!important
+ }
+}
+@media(max-width:600px){
+ body.ambient-mode .amb-center>.at-stage-avatar{bottom:195px!important}
+ body.ambient-mode .amb-center .at-stage-avatar>img{
+   height:calc(100% + 8px)!important;bottom:-15px!important
+ }
+ body.ambient-mode .amb-center .at-stage-avatar .at-avatar-pose{
+   height:calc(100% + 8px)!important;bottom:-14px!important
+ }
+ body.ambient-mode .at-pin-note{top:42px;right:9px;max-width:85px;font-size:9px}
+ body.ambient-mode .at-scene-kicker{font-size:9px}
+ body.ambient-mode .at-scene-id{font-size:8px}
+}
